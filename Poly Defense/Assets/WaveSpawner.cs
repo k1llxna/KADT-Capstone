@@ -14,6 +14,8 @@ public class WaveSpawner : MonoBehaviour
     private float countDown = 2f;
     private int waveNumber = 0;
 
+    public Transform Enemies;
+
     void Update()
     {
         if (countDown <= 0f)
@@ -39,6 +41,6 @@ public class WaveSpawner : MonoBehaviour
 
     void SpawnEnemy()
     {
-        Instantiate(enemyPrefab, spawnPoint.position, spawnPoint.rotation);
+        Instantiate(enemyPrefab, spawnPoint.position, spawnPoint.rotation, Enemies);
     }
 }

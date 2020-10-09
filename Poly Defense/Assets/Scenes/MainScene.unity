@@ -3626,6 +3626,36 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 417927574}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &420291264
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 420291265}
+  m_Layer: 0
+  m_Name: Enemies
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &420291265
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 420291264}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 54.18431, y: -34.30398, z: -5.0519924}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 13
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &423342629
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4880,6 +4910,7 @@ MonoBehaviour:
   spawnPoint: {fileID: 2090508112}
   waveIntermission: 5
   waveCountText: {fileID: 1483662959}
+  Enemies: {fileID: 420291265}
 --- !u!4 &643782421
 Transform:
   m_ObjectHideFlags: 0
