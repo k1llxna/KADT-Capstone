@@ -18,6 +18,10 @@ public class Character : MonoBehaviour
 
     Vector3 moveDirection = Vector3.zero;
 
+
+
+    public GameObject bullet;
+
     enum ControllerType {  SimpleMove, Move };
     [SerializeField] ControllerType type;
 
@@ -31,6 +35,8 @@ public class Character : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
+
+        Physics.IgnoreLayerCollision(8, 8, true);
 
         if (speed <= 0)
         {
@@ -62,7 +68,22 @@ public class Character : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        switch(type)
+        Move();
+
+
+        if (Input.GetMouseButtonDown(0))
+            Attack();
+
+        //Get information of targeted object with raycast
+        Target();
+
+        animator.SetFloat("Speed", Mathf.Abs(moveDirection.z));
+        animator.SetBool("Grounded", controller.isGrounded);
+    }
+
+    private void Move()
+    {
+        switch (type)
         {
             case ControllerType.SimpleMove:
                 controller.SimpleMove(transform.forward * (Input.GetAxis("Vertical") * speed));
@@ -84,16 +105,43 @@ public class Character : MonoBehaviour
                 moveDirection.y -= gravity * Time.deltaTime;
 
                 controller.Move(moveDirection * Time.deltaTime);
-
-
-
                 break;
         }
 
-        animator.SetFloat("Speed", Mathf.Abs(moveDirection.z));
-        animator.SetBool("Grounded", controller.isGrounded);
+        
+
+        float yLerp = Mathf.LerpAngle(transform.rotation.y, Camera.main.GetComponentInParent<Transform>().rotation.y, 0.5f);
+
+        Quaternion newRotation = new Quaternion(transform.rotation.x, yLerp, transform.rotation.z, transform.rotation.w);
+
+        transform.rotation = newRotation;
     }
 
+    void Attack()
+    {
+        Vector3 offset = new Vector3(0, 1, 0);
+        Instantiate(bullet, transform.position + offset, Camera.main.transform.rotation);
+    }
+
+    void Target()
+    {
+        RaycastHit hit;
+        Vector3 offset = new Vector3(0, 1, 0);
+
+        if (Physics.Raycast(transform.position + offset, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
+        {
+            if (hit.transform.tag.Equals("Enemy"))
+            {
+                Debug.DrawRay(transform.position + offset, transform.TransformDirection(Vector3.forward) * hit.distance, Color.blue);
+            }
+        }
+        else
+        {
+            Debug.DrawRay(transform.position + offset, Camera.main.transform.TransformDirection(Vector3.forward) * 10000, Color.yellow);
+        }
+    }
+
+    //Take damage based on damage that was dealt
     public void DealDamage(float damage)
     {
         health -= damage;

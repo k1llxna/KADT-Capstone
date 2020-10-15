@@ -114,6 +114,22 @@ public class Monster : MonoBehaviour
             target = closestCharacter.gameObject;
         }
     }
+
+    public void TakeDamage(float damage)
+    {
+        health -= damage;
+
+        if(health <= 0)
+        {
+            Die();
+        }
+    }
+
+    void Die()
+    {
+        Destroy(gameObject);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if(other.tag.Equals("Player"))
