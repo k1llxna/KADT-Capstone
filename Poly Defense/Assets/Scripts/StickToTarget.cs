@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraThing : MonoBehaviour
+public class StickToTarget : MonoBehaviour
 {
 
     public Transform target;

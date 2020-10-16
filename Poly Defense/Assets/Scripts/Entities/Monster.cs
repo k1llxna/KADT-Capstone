@@ -5,11 +5,15 @@ using System.Numerics;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
+using UnityEngine.UI;
+using TMPro;
 
 public class Monster : MonoBehaviour
 {
-    public float health;
-    public float damage;
+    public float maxHealth;
+    float health;
+
+    public int damage;
     public float speed;
 
     Animator animator;
@@ -18,7 +22,11 @@ public class Monster : MonoBehaviour
 
     KinematicArrive seek = new KinematicArrive();
 
-    public GameObject target;
+    GameObject target;
+
+    public Slider healthBar;
+    public Canvas UI;
+    public TextMeshProUGUI healthText;
 
     // Start is called before the first frame update
     void Start()
@@ -26,6 +34,7 @@ public class Monster : MonoBehaviour
         animator = GetComponent<Animator>();
 
         body.position = transform.position;
+        health = maxHealth;
     }
 
     // Update is called once per frame
@@ -37,6 +46,28 @@ public class Monster : MonoBehaviour
             FindTarget();
         }
 
+        if (target)
+        {
+            Move();
+        }
+
+        UpdateHealthBar();     
+    }
+
+    protected virtual void Attack()
+    {
+        if(target.tag.Equals("Player"))
+        {
+            target.GetComponent<Character>().TakeDamage(damage);
+        }
+        else
+        {
+            target.GetComponent<Structure>().TakeDamage(damage);
+        }
+    }
+
+    void Move()
+    {
         if ((transform.position - target.transform.position).magnitude <= 1)
         {
             Attack();
@@ -54,19 +85,6 @@ public class Monster : MonoBehaviour
             transform.position = body.position;
 
             animator.SetBool("Running", true);
-        }
-    }
-
-
-    protected virtual void Attack()
-    {
-        if(target.tag.Equals("Player"))
-        {
-            target.GetComponent<Character>().DealDamage(damage);
-        }
-        else
-        {
-            target.GetComponent<Structure>().DealDamage(damage);
         }
     }
 
@@ -95,24 +113,6 @@ public class Monster : MonoBehaviour
 
             target = closestStruct.gameObject;
         }
-        else if (characters.Length > 0)
-        {
-            Character closestCharacter = characters[0];
-            float distance = 9999999;
-
-            foreach (Character c in characters)
-            {
-                UnityEngine.Vector3 dis = c.gameObject.transform.position - transform.position;
-
-                if (dis.magnitude < distance)
-                {
-                    closestCharacter = c;
-                    distance = dis.magnitude;
-                }
-            }
-
-            target = closestCharacter.gameObject;
-        }
     }
 
     public void TakeDamage(float damage)
@@ -124,6 +124,13 @@ public class Monster : MonoBehaviour
             Die();
         }
     }
+
+    void UpdateHealthBar()
+    {
+        healthBar.value = health / maxHealth;
+        healthText.SetText(health.ToString());
+    }
+
 
     void Die()
     {

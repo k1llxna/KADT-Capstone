@@ -15,12 +15,14 @@ public class Character : MonoBehaviour
 
     public float health;
 
-
     Vector3 moveDirection = Vector3.zero;
 
-
-
     public GameObject bullet;
+
+    public GameObject[] towers;
+    bool building;
+
+
 
     enum ControllerType {  SimpleMove, Move };
     [SerializeField] ControllerType type;
@@ -70,15 +72,56 @@ public class Character : MonoBehaviour
     {
         Move();
 
+        if (!building)
+        {
+            if (Input.GetKeyDown("k"))
+                StartCoroutine("Building");
+        
+            if (Input.GetMouseButtonDown(0))
+                Attack();
 
-        if (Input.GetMouseButtonDown(0))
-            Attack();
-
-        //Get information of targeted object with raycast
-        Target();
+            //Get information of targeted object with raycast
+            Target();
+        }
 
         animator.SetFloat("Speed", Mathf.Abs(moveDirection.z));
         animator.SetBool("Grounded", controller.isGrounded);
+    }
+
+    IEnumerator Building()
+    {
+        bool hasBuilt = false;
+        building = true;
+
+        //This would be a tempTower array, and will instantiate the real tower later
+        GameObject tower = Instantiate(towers[0], new Vector3(100, 100, 100), transform.rotation);
+
+        RaycastHit hit;
+        Vector3 offset = new Vector3(0, 1, 0);
+        Vector3 towerOffset = new Vector3(0, 0.5f, 0);
+
+        while (!hasBuilt)
+        {
+            
+
+            Debug.DrawRay(transform.position + offset, Camera.main.transform.TransformDirection(Vector3.forward) * 5, Color.red);
+
+            if (Physics.Raycast(transform.position + offset, Camera.main.transform.TransformDirection(Vector3.forward), out hit, 5))
+            {
+                tower.transform.position = hit.point + towerOffset;
+                tower.transform.rotation = transform.rotation;
+            }
+
+            if (Input.GetMouseButton(0))
+            {
+                print("finished building");
+                hasBuilt = true;
+            }
+
+            yield return new WaitForEndOfFrame();
+        }
+
+        building = false;
     }
 
     private void Move()
@@ -109,12 +152,13 @@ public class Character : MonoBehaviour
         }
 
         
+        
+        float yLerp = Mathf.LerpAngle(transform.eulerAngles.y, Camera.main.transform.eulerAngles.y, 0.05f);
 
-        float yLerp = Mathf.LerpAngle(transform.rotation.y, Camera.main.GetComponentInParent<Transform>().rotation.y, 0.5f);
-
-        Quaternion newRotation = new Quaternion(transform.rotation.x, yLerp, transform.rotation.z, transform.rotation.w);
+        Quaternion newRotation = Quaternion.Euler(transform.rotation.x, yLerp, transform.rotation.z);
 
         transform.rotation = newRotation;
+        
     }
 
     void Attack()
@@ -128,11 +172,15 @@ public class Character : MonoBehaviour
         RaycastHit hit;
         Vector3 offset = new Vector3(0, 1, 0);
 
-        if (Physics.Raycast(transform.position + offset, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
+        if (Physics.Raycast(transform.position + offset, Camera.main.transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
         {
             if (hit.transform.tag.Equals("Enemy"))
             {
-                Debug.DrawRay(transform.position + offset, transform.TransformDirection(Vector3.forward) * hit.distance, Color.blue);
+                UIHandler uihandler = hit.transform.gameObject.GetComponent<UIHandler>();
+                uihandler.StopAllCoroutines();
+                uihandler.StartCoroutine("ShowUI");
+
+                Debug.DrawRay(transform.position + offset, Camera.main.transform.TransformDirection(Vector3.forward) * hit.distance, Color.blue);
             }
         }
         else
@@ -142,7 +190,7 @@ public class Character : MonoBehaviour
     }
 
     //Take damage based on damage that was dealt
-    public void DealDamage(float damage)
+    public void TakeDamage(int damage)
     {
         health -= damage;
     }

@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class Structure : MonoBehaviour
+public class Tower : MonoBehaviour
 {
     public float health;
 
