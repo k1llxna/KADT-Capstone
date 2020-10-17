@@ -159,7 +159,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 381774735b65fa244a368c80b3a61c19,
         type: 3}
       propertyPath: m_Name
-      value: zombie Variant
+      value: Zombie_Object
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 381774735b65fa244a368c80b3a61c19,
         type: 3}
@@ -196,6 +196,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Camera
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5777247961838622209, guid: c1cbd3f7f1fe4d54e81227d71afbc58e,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5777247961838622220, guid: c1cbd3f7f1fe4d54e81227d71afbc58e,
         type: 3}

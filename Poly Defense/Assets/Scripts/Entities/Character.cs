@@ -17,20 +17,11 @@ public class Character : MonoBehaviour
 
     Vector3 moveDirection = Vector3.zero;
 
-    public GameObject bullet;
-
     public GameObject[] towers;
     bool building;
 
-
-
     enum ControllerType {  SimpleMove, Move };
     [SerializeField] ControllerType type;
-
-    void Awake()
-    {
-        
-    }
 
     // Start is called before the first frame update
     void Start()
@@ -90,6 +81,8 @@ public class Character : MonoBehaviour
 
     IEnumerator Building()
     {
+        LayerMask ground = 1 << 9;
+
         bool hasBuilt = false;
         building = true;
 
@@ -106,7 +99,7 @@ public class Character : MonoBehaviour
 
             Debug.DrawRay(transform.position + offset, Camera.main.transform.TransformDirection(Vector3.forward) * 5, Color.red);
 
-            if (Physics.Raycast(transform.position + offset, Camera.main.transform.TransformDirection(Vector3.forward), out hit, 5))
+            if (Physics.Raycast(transform.position + offset, Camera.main.transform.TransformDirection(Vector3.forward), out hit, ground))
             {
                 tower.transform.position = hit.point + towerOffset;
                 tower.transform.rotation = transform.rotation;
@@ -120,6 +113,9 @@ public class Character : MonoBehaviour
 
             yield return new WaitForEndOfFrame();
         }
+
+        //While(!hasTurned)
+        //allow option for fine rotatating of the newly built tower
 
         building = false;
     }
@@ -161,10 +157,8 @@ public class Character : MonoBehaviour
         
     }
 
-    void Attack()
+    protected virtual void Attack()
     {
-        Vector3 offset = new Vector3(0, 1, 0);
-        Instantiate(bullet, transform.position + offset, Camera.main.transform.rotation);
     }
 
     void Target()
@@ -179,6 +173,13 @@ public class Character : MonoBehaviour
                 UIHandler uihandler = hit.transform.gameObject.GetComponent<UIHandler>();
                 uihandler.StopAllCoroutines();
                 uihandler.StartCoroutine("ShowUI");
+
+                //Keeps HealthBar Roughly the same size throughout
+                float size = (transform.position - hit.transform.position).magnitude/100;
+                if (size < 0.08)
+                    size = 0.08f;
+
+                uihandler.slider.transform.localScale = new Vector3(size, size, size);
 
                 Debug.DrawRay(transform.position + offset, Camera.main.transform.TransformDirection(Vector3.forward) * hit.distance, Color.blue);
             }

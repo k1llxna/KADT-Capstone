@@ -35,12 +35,16 @@ public class Monster : MonoBehaviour
 
         body.position = transform.position;
         health = maxHealth;
+
+        target = FindObjectOfType<Structure>().gameObject;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
+        GetCloserTarget();
+
         if(!target)
         {
             FindTarget();
@@ -112,6 +116,25 @@ public class Monster : MonoBehaviour
             }
 
             target = closestStruct.gameObject;
+        }
+    }
+    void GetCloserTarget()
+    {
+        Structure[] towers = FindObjectsOfType<Structure>();
+
+        if (towers.Length > 0)
+        {
+
+            foreach (Structure t in towers)
+            {
+                UnityEngine.Vector3 dis = t.gameObject.transform.position - transform.position;
+                UnityEngine.Vector3 targetDis = target.transform.position - transform.position;
+
+                if (dis.magnitude < targetDis.magnitude)
+                {
+                    target = t.gameObject;
+                }
+            }
         }
     }
 
