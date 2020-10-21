@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class KinematicArrive
@@ -26,12 +27,22 @@ public class KinematicArrive
 		// clip to max speed
 		if (result.velocity.magnitude > maxSpeed)
 		{
-			result.velocity.Normalize();
+			result.velocity.Normalize();	
 			result.velocity *= maxSpeed;
 
 		}
 
-		result.rotation = 0;
+		
+		result.rotation = NewOrientation(result.velocity, character.orientation);
 		return result;
+	}
+
+	float NewOrientation(Vector3 velocity, float currentOrientation)
+    {
+		if (velocity.magnitude > 0)
+			return Mathf.Atan2(velocity.x, velocity.z);
+		else
+			return currentOrientation;
+
 	}
 }
