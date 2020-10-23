@@ -14,14 +14,9 @@ public class Main : MonoBehaviour
 
     public Animator animator;
 
-    Seek seek = new Seek();
-
-    Arrive arrive = new Arrive();
     ObstacleAvoidance avoid = new ObstacleAvoidance();
 
     Kinematic body = new Kinematic();
-    Kinematic bodyTarget = new Kinematic();
-    Align align = new Align();
 
     public bool Arrive;
     public bool pathfind;
@@ -31,15 +26,6 @@ public class Main : MonoBehaviour
 
     private void Start()
     {
-        seek.character = body;
-        seek.maxAcceleration = speed;
-
-        arrive.character = body;
-        arrive.maxAcceleration = acceleration;
-        arrive.maxSpeed = speed;
-        arrive.targetRadius = 1;
-        arrive.slowRadius = 1;
-
         avoid.character = body;
         avoid.maxAcceleration = acceleration;
         avoid.maxSpeed = speed;
@@ -89,7 +75,6 @@ public class Main : MonoBehaviour
 
         target = waypoints[currentWaypoint];
 
-        arrive.target = target;
         avoid.target = target;
 
         while(isPathfinding)
@@ -106,7 +91,6 @@ public class Main : MonoBehaviour
 
                 currentWaypoint++;
                 target = waypoints[currentWaypoint];
-                arrive.target = target;
                 avoid.target = target;
             }
             else
