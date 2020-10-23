@@ -99,7 +99,7 @@ public class Character : MonoBehaviour
 
             Debug.DrawRay(transform.position + offset, Camera.main.transform.TransformDirection(Vector3.forward) * 5, Color.red);
 
-            if (Physics.Raycast(transform.position + offset, Camera.main.transform.TransformDirection(Vector3.forward), out hit, ground))
+            if (Physics.Raycast(transform.position + offset, Camera.main.transform.TransformDirection(Vector3.forward), out hit, 5, ground))
             {
                 tower.transform.position = hit.point + towerOffset;
                 tower.transform.rotation = transform.rotation;

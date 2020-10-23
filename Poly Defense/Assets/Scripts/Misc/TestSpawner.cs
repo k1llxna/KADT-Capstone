@@ -6,6 +6,7 @@ public class TestSpawner : MonoBehaviour
 {
     public GameObject monster;
     public Transform[] spawnPoint;
+    public WaypointList[] waypoints;
     bool spawning = true;
 
     // Start is called before the first frame update
@@ -18,10 +19,11 @@ public class TestSpawner : MonoBehaviour
     {   
         while (spawning)
         {
-            int random = Random.Range(0, 3);
+            int random = Random.Range(0, spawnPoint.Length);
 
 
-            Instantiate(monster, spawnPoint[random].position, Quaternion.identity);
+            Main newMonster = Instantiate(monster, spawnPoint[random].position, Quaternion.identity).GetComponent<Main>();
+            newMonster.waypoints = waypoints[random].waypoints;
 
             yield return new WaitForSeconds(2f);
         }
