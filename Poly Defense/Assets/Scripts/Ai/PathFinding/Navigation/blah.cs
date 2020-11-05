@@ -22,7 +22,6 @@ public class blah : MonoBehaviour
         setStart(start);
         setFinish(finish);
         UpdateGraph();
-
     }
 
     private void Update()
@@ -116,8 +115,6 @@ public class blah : MonoBehaviour
             {
                 finishNode = node;
             }
-
-
         }
     }
 
@@ -129,7 +126,7 @@ public class blah : MonoBehaviour
             print(t.Value);
         }
 
-        Dictionary<Node<Transform>, Node<Transform>> cameFrom = GraphSearch<Transform>.Search(graph, startNode);
+        Dictionary<Node<Transform>, Node<Transform>> cameFrom = GraphSearch<Transform>.BFS(graph, startNode, finishNode);
 
 
         Node<Transform> nextNode;
