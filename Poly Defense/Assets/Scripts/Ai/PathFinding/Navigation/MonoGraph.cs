@@ -35,7 +35,9 @@ public class MonoGraph : MonoBehaviour
             {
                 GraphNode<MonoNode> neghbouringNode = (GraphNode<MonoNode>)nodeSet.FindByValue(mNode);
 
-                graph.AddDirectedEdge(gNode, neghbouringNode, gNode.Value.cost);
+                float distance = (mNode.transform.position - gNode.Value.transform.position).magnitude;
+
+                graph.AddDirectedEdge(gNode, neghbouringNode, Mathf.RoundToInt(distance));
             }
         }
     }
@@ -51,19 +53,27 @@ public class MonoGraph : MonoBehaviour
         }
     }
 
-    public Node<MonoNode> findClosestNode(Transform transform)
+    public Node<MonoNode> FindClosestNode(Transform transform)
     {
-
         Node<MonoNode> closestNode = nodeSet[0];
 
         foreach(Node<MonoNode> node in nodeSet)
         {
             if (Mathf.Abs((node.Value.transform.position - transform.position).magnitude) < Mathf.Abs((closestNode.Value.transform.position - transform.position).magnitude))
             {
-                closestNode = node;
+                //If the node can see the transform it is a valid node -- Object cannot use a close node that is behind a wall
+                Ray ray = new Ray(transform.position + Vector3.up, (node.Value.transform.position - (transform.position + Vector3.up)).normalized);
+                RaycastHit hit;
+                if(Physics.Raycast(ray.origin, ray.direction * 100, out hit, 100f))
+                {
+                    if(hit.point == node.Value.transform.position)
+                    {
+                        closestNode = node;
+                        Debug.DrawRay(ray.origin, ray.direction * 100, Color.red, 1f);
+                    }                    
+                }                
             }
         }
-
         return closestNode;
     }
 }

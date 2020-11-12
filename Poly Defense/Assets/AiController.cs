@@ -6,7 +6,6 @@ public class AiController : MonoBehaviour
 {
 
     MonoGraph mGraph;
-    Transform target;
 
     Kinematic body = new Kinematic();
     Arrive arrive = new Arrive();
@@ -38,10 +37,10 @@ public class AiController : MonoBehaviour
     IEnumerator Pathfind(Transform target)
     {
         Graph<MonoNode> graph = mGraph.graph;
-        Node<MonoNode> startNode = mGraph.findClosestNode(transform);
-        Node<MonoNode> endNode = mGraph.findClosestNode(target);
+        Node<MonoNode> startNode = mGraph.FindClosestNode(transform);
+        Node<MonoNode> endNode = mGraph.FindClosestNode(target);
 
-        var camefrom = GraphSearch<MonoNode>.BFS(graph, startNode, endNode);
+        var camefrom = GraphSearch<MonoNode>.Dijkstra(graph, startNode, endNode);
 
         List<Transform> waypointList = new List<Transform>();
 
@@ -57,7 +56,8 @@ public class AiController : MonoBehaviour
 
             camefrom.TryGetValue(currentNode, out currentNode);
         }
-               
+
+        waypointList.Add(startNode.Value.transform);
 
         int currentWaypoint = waypointList.Count - 1;
         Transform targetDestination = waypointList[currentWaypoint];

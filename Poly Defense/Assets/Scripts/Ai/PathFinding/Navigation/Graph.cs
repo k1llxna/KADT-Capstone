@@ -47,6 +47,21 @@ public class Graph<T>
         to.Costs.Add(cost);
     }
 
+    public int Cost(GraphNode<T> from, GraphNode<T> to)
+    {
+        int neighbourCounter = 0;
+
+        foreach(GraphNode<T> neighbour in from.Neighbors)
+        {
+            if(neighbour == to)
+            {
+                return to.Costs[neighbourCounter];
+            }
+        }
+
+        return 0;
+    }
+
     public bool contains(T value)
     {
         return nodeSet.FindByValue(value) != null;
@@ -60,6 +75,19 @@ public class Graph<T>
     public NodeList<T> Neighbours(T value)
     {
         return nodeSet.FindByValue(value).Neighbors;
+    }
+
+    public GraphNode<T> GetGraphNode(Node<T> node)
+    {
+        foreach(Node<T> n in  nodeSet)
+        {
+            if(n == node)
+            {
+                return (GraphNode<T>)n;
+            }
+        }
+
+        return null;
     }
 
     public bool Remove(T value)

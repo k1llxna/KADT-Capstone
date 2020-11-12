@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
+﻿using System.Collections.Generic;
+using Priority_Queue;
+
 
 public class GraphSearch<T>
 {
@@ -47,6 +46,9 @@ public class GraphSearch<T>
         {
             Node<T> current = frontier.Dequeue();
 
+            if (current == goal)
+                break;
+
             foreach (var next in graph.Neighbours(current))
             {
                 if (!cameFrom.ContainsKey(next))
@@ -62,23 +64,32 @@ public class GraphSearch<T>
 
     public static Dictionary<Node<T>, Node<T>> Dijkstra(Graph<T> graph, Node<T> start, Node<T> goal)
     {
-        var frontier = new Queue<Node<T>>();
-        frontier.Enqueue(start);
+        var frontier = new SimplePriorityQueue<Node<T>, int>();
+        frontier.Enqueue(start, 0);
 
         var cameFrom = new Dictionary<Node<T>, Node<T>>();
+        var costSoFar = new Dictionary<Node<T>, int>();
 
         cameFrom[start] = default(Node<T>);
+        costSoFar[start] = 0;
 
         while (frontier.Count > 0)
         {
             Node<T> current = frontier.Dequeue();
 
+            if (current == goal)
+                break;
+
             foreach (var next in graph.Neighbours(current))
             {
-                if (!cameFrom.ContainsKey(next))
+                int newCost = costSoFar[current] + graph.Cost(graph.GetGraphNode(current), graph.GetGraphNode(next));
+
+                if (!costSoFar.ContainsKey(next) || newCost < costSoFar[next])
                 {
-                    frontier.Enqueue(next);
-                    cameFrom.Add(next, current);
+                    costSoFar[next] = newCost;
+                    cameFrom[next] = current;
+                    frontier.Enqueue(next, newCost);
+                    
                 }
             }
         }
@@ -88,12 +99,14 @@ public class GraphSearch<T>
 
     public static Dictionary<Node<T>, Node<T>> ASearch(Graph<T> graph, Node<T> start, Node<T> goal)
     {
-        var frontier = new Queue<Node<T>>();
-        frontier.Enqueue(start);
+        var frontier = new SimplePriorityQueue<Node<T>, int>();
+        frontier.Enqueue(start, 0);
 
         var cameFrom = new Dictionary<Node<T>, Node<T>>();
+        var costSoFar = new Dictionary<Node<T>, int>();
 
         cameFrom[start] = default(Node<T>);
+        costSoFar[start] = 0;
 
         while (frontier.Count > 0)
         {
@@ -101,10 +114,14 @@ public class GraphSearch<T>
 
             foreach (var next in graph.Neighbours(current))
             {
-                if (!cameFrom.ContainsKey(next))
+                int newCost = costSoFar[current] + graph.Cost(graph.GetGraphNode(current), graph.GetGraphNode(next));
+
+                if (!costSoFar.ContainsKey(next) || newCost < costSoFar[next])
                 {
-                    frontier.Enqueue(next);
-                    cameFrom.Add(next, current);
+                    costSoFar[next] = newCost;
+                    int priority = newCost;// + Heuristic(next.Value, goal.Value);
+                    frontier.Enqueue(next, priority);
+                    cameFrom[next] = current;
                 }
             }
         }
@@ -112,13 +129,8 @@ public class GraphSearch<T>
         return cameFrom;
     }
 
-    float heuristic(Vector2 a, Vector2 b)
+    int Heuristic(Graph<T> graph, Node<T> start, Node<T> finish)
     {
-        return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
-    }
-
-    float heuristic(Vector3 a, Vector3 b)
-    {
-        return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y) + Mathf.Abs(a.z - b.z);
+        return 0;
     }
 }
