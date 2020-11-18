@@ -2,13 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Mage : Character
+public class Mage : ServerPlayer
 {
     public GameObject bullet;
-
-
-
-
 
     protected override void Attack()
     {

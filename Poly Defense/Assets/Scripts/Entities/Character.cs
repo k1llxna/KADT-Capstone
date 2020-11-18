@@ -1,9 +1,10 @@
-﻿using System.Collections;
+﻿using Photon.Pun;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
-public class Character : MonoBehaviour
+public class Character : MonoBehaviourPun
 {
     CharacterController controller;
     Animator animator;
@@ -61,22 +62,32 @@ public class Character : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Move();
-
-        if (!building)
+        if (!photonView.IsMine)
+            return;
+        else
         {
-            if (Input.GetKeyDown("k"))
-                StartCoroutine("Building");
-        
-            if (Input.GetMouseButtonDown(0))
-                Attack();
 
-            //Get information of targeted object with raycast
-            Target();
+
+            Move();
+
+            if (!building)
+            {
+                if (Input.GetKeyDown("k"))
+                    StartCoroutine("Building");
+
+                if (Input.GetMouseButtonDown(0))
+                    photonView.RPC("Attack", RpcTarget.All);
+
+                //Get information of targeted object with raycast
+                Target();
+            }
+
+            photonView.RPC("RPC_SetSpeed", RpcTarget.All, moveDirection.z); 
+            photonView.RPC("RPC_SetGrounded", RpcTarget.All, controller.isGrounded);
+            photonView.RPC("RPC_SetPosition", RpcTarget.All, transform.position);
+            photonView.RPC("RPC_SetRotation", RpcTarget.All, transform.rotation);
         }
 
-        animator.SetFloat("Speed", Mathf.Abs(moveDirection.z));
-        animator.SetBool("Grounded", controller.isGrounded);
     }
 
     IEnumerator Building()
@@ -147,16 +158,38 @@ public class Character : MonoBehaviour
                 break;
         }
 
-        
-        
+
+
         float yLerp = Mathf.LerpAngle(transform.eulerAngles.y, Camera.main.transform.eulerAngles.y, 0.05f);
 
         Quaternion newRotation = Quaternion.Euler(transform.rotation.x, yLerp, transform.rotation.z);
 
         transform.rotation = newRotation;
-        
+
     }
 
+    [PunRPC]
+    void RPC_SetPosition(Vector3 position)
+    {
+        transform.position = position;
+    }
+    [PunRPC]
+    void RPC_SetRotation(Quaternion rotation)
+    {
+        transform.rotation = rotation;
+    }
+    [PunRPC]
+    void RPC_SetSpeed(int speed)
+    {
+        animator.SetFloat("Speed", Mathf.Abs(speed));
+    }
+    [PunRPC]
+    void RPC_SetGrounded(bool isGrounded)
+    {
+        animator.SetBool("Grounded", isGrounded);
+    }
+
+    [PunRPC]
     protected virtual void Attack()
     {
     }
