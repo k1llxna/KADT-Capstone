@@ -79,8 +79,7 @@ public class ServerPlayer : MonoBehaviourPun
 
                 //Get information of targeted object with raycast
                 Target();
-            }
-            
+            }      
 
         }
 
