@@ -81,9 +81,7 @@ public class ServerPlayer : MonoBehaviourPun
                 Target();
             }
             
-            photonView.RPC("RPC_SetGrounded", RpcTarget.All, controller.isGrounded);
-            photonView.RPC("RPC_SetPosition", RpcTarget.All, transform.position);
-            photonView.RPC("RPC_SetRotation", RpcTarget.All, transform.rotation);
+
         }
 
     }
@@ -147,10 +145,12 @@ public class ServerPlayer : MonoBehaviourPun
                     if (Input.GetButtonDown("Jump"))
                         moveDirection.y = jumpSpeed;
 
+                    /*
                     if(moveDirection.magnitude > 0.1)
                     {
                         photonView.RPC("RPC_SetSpeed", RpcTarget.All, moveDirection.z);
                     }
+                    */
                 }
 
                 moveDirection.y -= gravity * Time.deltaTime;

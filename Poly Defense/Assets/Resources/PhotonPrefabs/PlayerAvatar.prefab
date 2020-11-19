@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1497267383777214667}
   - component: {fileID: 8551115213358864297}
   - component: {fileID: 4049674424403758489}
+  - component: {fileID: -516749402213410154}
   m_Layer: 0
   m_Name: PlayerAvatar
   m_TagString: Untagged
@@ -139,6 +140,24 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-516749402213410154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1497267383777214664}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98d80ffaa910beb4fa0141db4418d550, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controller: {fileID: 0}
+  speed: 5
+  jumpSpeed: 10
+  rotationSpeed: 10
+  gravity: 9
+  type: 1
 --- !u!1 &6162740987076034024
 GameObject:
   m_ObjectHideFlags: 0

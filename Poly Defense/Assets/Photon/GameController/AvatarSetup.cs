@@ -28,9 +28,8 @@ public class AvatarSetup : MonoBehaviour
     void RPC_AddCharacter(int whichCharacter)
     {
         characterValue = whichCharacter;
-        myCharacter = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Player"), transform.position, transform.rotation, 0);
-
-
+        myCharacter = Instantiate(PlayerInfo.PI.allCharacters[0], transform.position, transform.rotation, transform);
+     
         //This can have local player info and replace the info of the charatcer
     }
 

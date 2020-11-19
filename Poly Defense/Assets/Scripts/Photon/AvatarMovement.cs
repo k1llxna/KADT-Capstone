@@ -6,7 +6,7 @@ using UnityEngine;
 public class AvatarMovement : MonoBehaviourPun
 {
 
-    CharacterController controller;
+    public CharacterController controller;
     public float speed;
     public float jumpSpeed;
     public float rotationSpeed; // Used when not using MouseLook.CS to rotate character

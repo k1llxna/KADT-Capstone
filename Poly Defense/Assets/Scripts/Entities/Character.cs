@@ -62,32 +62,20 @@ public class Character : MonoBehaviourPun
     // Update is called once per frame
     void Update()
     {
-        if (!photonView.IsMine)
-            return;
-        else
+
+        Move();
+
+        if (!building)
         {
+            if (Input.GetKeyDown("k"))
+                StartCoroutine("Building");
 
+            if (Input.GetMouseButtonDown(0))
+                Attack();
 
-            Move();
-
-            if (!building)
-            {
-                if (Input.GetKeyDown("k"))
-                    StartCoroutine("Building");
-
-                if (Input.GetMouseButtonDown(0))
-                    photonView.RPC("Attack", RpcTarget.All);
-
-                //Get information of targeted object with raycast
-                Target();
-            }
-
-            photonView.RPC("RPC_SetSpeed", RpcTarget.All, moveDirection.z); 
-            photonView.RPC("RPC_SetGrounded", RpcTarget.All, controller.isGrounded);
-            photonView.RPC("RPC_SetPosition", RpcTarget.All, transform.position);
-            photonView.RPC("RPC_SetRotation", RpcTarget.All, transform.rotation);
+            //Get information of targeted object with raycast
+            Target();
         }
-
     }
 
     IEnumerator Building()
@@ -155,6 +143,9 @@ public class Character : MonoBehaviourPun
                 moveDirection.y -= gravity * Time.deltaTime;
 
                 controller.Move(moveDirection * Time.deltaTime);
+
+                animator.SetFloat("Speed", moveDirection.z);
+
                 break;
         }
 
@@ -168,31 +159,7 @@ public class Character : MonoBehaviourPun
 
     }
 
-    [PunRPC]
-    void RPC_SetPosition(Vector3 position)
-    {
-        transform.position = position;
-    }
-    [PunRPC]
-    void RPC_SetRotation(Quaternion rotation)
-    {
-        transform.rotation = rotation;
-    }
-    [PunRPC]
-    void RPC_SetSpeed(int speed)
-    {
-        animator.SetFloat("Speed", Mathf.Abs(speed));
-    }
-    [PunRPC]
-    void RPC_SetGrounded(bool isGrounded)
-    {
-        animator.SetBool("Grounded", isGrounded);
-    }
-
-    [PunRPC]
-    protected virtual void Attack()
-    {
-    }
+    public virtual void Attack(){ }
 
     void Target()
     {
