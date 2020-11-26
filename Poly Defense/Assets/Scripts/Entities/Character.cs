@@ -98,9 +98,7 @@ public class Character : MonoBehaviourPun
         Vector3 towerOffset = new Vector3(0, 0.5f, 0);
 
         while (!hasBuilt)
-        {
-            
-
+        {        
             Debug.DrawRay(transform.position + offset, Camera.main.transform.TransformDirection(Vector3.forward) * 5, Color.red);
 
             if (Physics.Raycast(transform.position + offset, Camera.main.transform.TransformDirection(Vector3.forward), out hit, 5, ground))

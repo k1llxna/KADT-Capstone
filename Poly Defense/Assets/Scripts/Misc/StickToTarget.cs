@@ -6,7 +6,7 @@ public class StickToTarget : MonoBehaviour
 {
 
     public Transform target;
-    public Vector3 offset = new Vector3(0, 1, 0);
+    public Vector3 offset = new Vector3(0, 0, 0);
 
 
      void Update()
@@ -23,7 +23,7 @@ public class StickToTarget : MonoBehaviour
         }
         else
         {
-            transform.position = target.position + offset;
+            transform.localPosition = target.localPosition + offset;
         }
     }
 }
