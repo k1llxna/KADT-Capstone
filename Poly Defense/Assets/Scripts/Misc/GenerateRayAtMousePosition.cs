@@ -18,8 +18,8 @@ public class GenerateRayAtMousePosition : MonoBehaviour
                 Debug.DrawRay(ray.origin, ray.direction * 100, Color.yellow);
                 hitPosition.position = hit.point;
 
-
-                ai.StartPathfinding(hitPosition);
+                ai.target = hitPosition;
+                ai.UpdatePathfinding();
             }
             else
             {

@@ -6,26 +6,26 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class ServerPlayer : MonoBehaviourPun
 {
-    CharacterController controller;    
-    Animator animator;
+    protected CharacterController controller;    
+    protected Animator animator;
 
-    public Transform playerTransform;
+    //public Transform playerTransform;
     public float speed;
     public float jumpSpeed;
     public float rotationSpeed; // Used when not using MouseLook.CS to rotate character
     public float gravity;
-    bool isGrounded;
+    protected bool isGrounded;
     
 
     public float health;
 
-    Vector3 moveDirection = Vector3.zero;
+    protected Vector3 moveDirection = Vector3.zero;
 
     public GameObject[] towers;
-    bool building;
+    protected bool building;
 
-    enum ControllerType { SimpleMove, Move };
-    [SerializeField] ControllerType type;
+    protected enum ControllerType { SimpleMove, Move };
+    [SerializeField] protected ControllerType type;
 
     // Start is called before the first frame update
     void Start()
@@ -75,17 +75,15 @@ public class ServerPlayer : MonoBehaviourPun
                     StartCoroutine("Building");
 
                 if (Input.GetMouseButtonDown(0))
-                    photonView.RPC("Attack", RpcTarget.All);
+                    photonView.RPC("Attack", RpcTarget.All, transform.position, Camera.main.transform.rotation);
 
                 //Get information of targeted object with raycast
                 Target();
             }      
-
         }
-
     }
 
-    IEnumerator Building()
+    protected IEnumerator Building()
     {
         LayerMask ground = 1 << 9;
 
@@ -93,7 +91,7 @@ public class ServerPlayer : MonoBehaviourPun
         building = true;
 
         //This would be a tempTower array, and will instantiate the real tower later
-        GameObject tower = Instantiate(towers[0], new Vector3(100, 100, 100), transform.rotation);
+        GameObject tower = Instantiate(towers[0], new Vector3(100,100,100), transform.rotation);
 
         RaycastHit hit;
         Vector3 offset = new Vector3(0, 1, 0);
@@ -111,7 +109,10 @@ public class ServerPlayer : MonoBehaviourPun
 
             if (Input.GetMouseButton(0))
             {
-                print("finished building");
+                Debug.Log("finished building");
+                Destroy(tower);
+
+                photonView.RPC("BuildTower", RpcTarget.AllBuffered, tower.transform.position);                
                 hasBuilt = true;
             }
 
@@ -124,7 +125,7 @@ public class ServerPlayer : MonoBehaviourPun
         building = false;
     }
 
-    private void Move()
+    protected void Move()
     {
         switch (type)
         {
@@ -137,7 +138,7 @@ public class ServerPlayer : MonoBehaviourPun
                 {
                     moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 
-                    moveDirection = playerTransform.TransformDirection(moveDirection);
+                    moveDirection = transform.TransformDirection(moveDirection);
 
                     moveDirection *= speed;
 
@@ -156,6 +157,9 @@ public class ServerPlayer : MonoBehaviourPun
 
                 controller.Move(moveDirection * Time.deltaTime);
 
+                photonView.RPC("RPC_SetSpeed", RpcTarget.All, moveDirection.x);
+                photonView.RPC("RPC_SetPosition", RpcTarget.All, transform.position);
+
                 if (controller.isGrounded)
                     isGrounded = true;
                 
@@ -164,13 +168,15 @@ public class ServerPlayer : MonoBehaviourPun
 
 
 
-        float yLerp = Mathf.LerpAngle(playerTransform.eulerAngles.y, Camera.main.transform.eulerAngles.y, 0.05f);
-        Quaternion newRotation = Quaternion.Euler(playerTransform.rotation.x, yLerp, playerTransform.rotation.z);
+        float yLerp = Mathf.LerpAngle(transform.eulerAngles.y, Camera.main.transform.eulerAngles.y, 0.05f);
+        Quaternion newRotation = Quaternion.Euler(transform.rotation.x, yLerp, transform.rotation.z);
         transform.rotation = newRotation;
+
+        photonView.RPC("RPC_SetRotation", RpcTarget.All, transform.rotation);
 
     }
 
-    void Target()
+    protected void Target()
     {
         RaycastHit hit;
         Vector3 offset = new Vector3(0, 1, 0);
@@ -206,6 +212,11 @@ public class ServerPlayer : MonoBehaviourPun
     }
 
     [PunRPC]
+    void Attack(Vector3 position, Quaternion rotation)
+    {
+    }
+
+    [PunRPC]
     void RPC_SetPosition(Vector3 position)
     {
         transform.position = position;
@@ -225,11 +236,9 @@ public class ServerPlayer : MonoBehaviourPun
     {
         animator.SetBool("Grounded", isGrounded);
     }
-
     [PunRPC]
-    protected virtual void Attack()
+    void BuildTower(Vector3 position)
     {
+        Instantiate(towers[0], position, transform.rotation);
     }
-
-    
 }

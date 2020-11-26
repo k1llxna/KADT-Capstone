@@ -6,11 +6,24 @@ public class StickToTarget : MonoBehaviour
 {
 
     public Transform target;
-    Vector3 offset = new Vector3(0, 1, 0);
+    public Vector3 offset = new Vector3(0, 1, 0);
 
 
      void Update()
     {
-        transform.position = target.position + offset;
+        if (target == null)
+        {
+            foreach (ServerPlayer player in GameObject.FindObjectsOfType<ServerPlayer>())
+            {
+                if (player.photonView.IsMine)
+                {
+                    target = player.transform;
+                }
+            }
+        }
+        else
+        {
+            transform.position = target.position + offset;
+        }
     }
 }

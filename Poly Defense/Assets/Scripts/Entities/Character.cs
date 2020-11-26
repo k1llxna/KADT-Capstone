@@ -76,6 +76,11 @@ public class Character : MonoBehaviourPun
             //Get information of targeted object with raycast
             Target();
         }
+
+        if(controller.isGrounded)
+        {
+            isGrounded = true;
+        }
     }
 
     IEnumerator Building()
@@ -128,7 +133,7 @@ public class Character : MonoBehaviourPun
                 break;
 
             case ControllerType.Move:
-                if (controller.isGrounded)
+                if (isGrounded)
                 {
                     moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 
@@ -144,7 +149,7 @@ public class Character : MonoBehaviourPun
 
                 controller.Move(moveDirection * Time.deltaTime);
 
-                animator.SetFloat("Speed", moveDirection.z);
+                animator.SetFloat("Speed", Mathf.Abs(moveDirection.z));
 
                 break;
         }

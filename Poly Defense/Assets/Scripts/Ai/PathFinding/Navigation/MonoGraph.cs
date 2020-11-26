@@ -4,17 +4,15 @@ using UnityEngine;
 
 public class MonoGraph : MonoBehaviour
 {
-    MonoNode[] nodes;
+    public MonoNode[] nodes;
 
     public Graph<MonoNode> graph;
     public NodeList<MonoNode> nodeSet = new NodeList<MonoNode>();
 
     public Color neighbourColor;
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-
         nodes = FindObjectsOfType<MonoNode>();
 
         //Populate NodeSet
@@ -35,9 +33,9 @@ public class MonoGraph : MonoBehaviour
             {
                 GraphNode<MonoNode> neghbouringNode = (GraphNode<MonoNode>)nodeSet.FindByValue(mNode);
 
-                float distance = (mNode.transform.position - gNode.Value.transform.position).magnitude;
+                float cost = (mNode.cost + gNode.Value.cost);
 
-                graph.AddDirectedEdge(gNode, neghbouringNode, Mathf.RoundToInt(distance));
+                graph.AddDirectedEdge(gNode, neghbouringNode, Mathf.RoundToInt(cost));
             }
         }
     }
@@ -53,27 +51,96 @@ public class MonoGraph : MonoBehaviour
         }
     }
 
+    //Return the absolute closest node
     public Node<MonoNode> FindClosestNode(Transform transform)
     {
+        float distance = float.MaxValue;
         Node<MonoNode> closestNode = nodeSet[0];
 
         foreach(Node<MonoNode> node in nodeSet)
         {
-            if (Mathf.Abs((node.Value.transform.position - transform.position).magnitude) < Mathf.Abs((closestNode.Value.transform.position - transform.position).magnitude))
+            if (Mathf.Abs((node.Value.transform.position - transform.position).magnitude) < distance)
             {
+                
                 //If the node can see the transform it is a valid node -- Object cannot use a close node that is behind a wall
-                Ray ray = new Ray(transform.position + Vector3.up, (node.Value.transform.position - (transform.position + Vector3.up)).normalized);
+                Ray ray = new Ray(node.Value.transform.position + Vector3.up, (transform.position - (node.Value.transform.position + Vector3.up)).normalized);
                 RaycastHit hit;
+
                 if(Physics.Raycast(ray.origin, ray.direction * 100, out hit, 100f))
                 {
-                    if(hit.point == node.Value.transform.position)
+                    if(hit.transform == transform)
                     {
                         closestNode = node;
-                        Debug.DrawRay(ray.origin, ray.direction * 100, Color.red, 1f);
-                    }                    
-                }                
+                        distance = Mathf.Abs((node.Value.transform.position - transform.position).magnitude);
+                        Debug.DrawLine(ray.origin, hit.point, Color.red, 1f);
+                    }
+                    else
+                    {
+                        Debug.DrawRay(ray.origin, ray.direction * 100, Color.green, 1f);
+                        
+                    }
+
+                    print(hit.transform);
+                }
+                else
+                {
+                    Debug.DrawRay(ray.origin, ray.direction * 100, Color.yellow, 1f);
+                }
             }
         }
         return closestNode;
+    }
+
+    //Return the node that is fastest to goal
+    public Node<MonoNode> FindBestNode(Transform transform, Node<MonoNode> goal)
+    {
+        List<Node<MonoNode>> seeableNodes = new List<Node<MonoNode>>();
+
+        foreach (Node<MonoNode> node in nodeSet)
+        {
+            //If the node can see the transform it is a valid node -- Object cannot use a close node that is behind a wall
+            //Add that node to the seeable nodes list
+            Ray ray = new Ray(node.Value.transform.position + Vector3.up, (transform.position - (node.Value.transform.position + Vector3.up)).normalized);
+            RaycastHit hit;
+            if (Physics.Raycast(ray.origin, ray.direction * 100, out hit, 100f))
+            {
+                if (hit.collider.transform == transform)
+                {
+                    seeableNodes.Add(node);
+                    Debug.DrawRay(ray.origin, ray.direction * 100, Color.red, 1f);
+                }               
+            }
+            else
+            {
+                Debug.DrawRay(ray.origin, ray.direction * 100, Color.yellow, 1f);
+            }
+        }
+
+        int smallestCost = int.MaxValue;
+        Node<MonoNode> bestNode = seeableNodes[0];
+
+        //Now we had a list of seeable Nodes -- time to find the best node out of all of them
+        foreach (Node<MonoNode> seeableNode in seeableNodes)
+        {
+            var camefrom = GraphSearch<MonoNode>.BFS(graph, seeableNode, goal);
+            Node<MonoNode> currentNode = goal;
+
+            int totalCost = 0;
+
+            while (currentNode != seeableNode)
+            {
+                totalCost += currentNode.Value.cost;
+
+                camefrom.TryGetValue(currentNode, out currentNode);
+            }
+
+            if(totalCost < smallestCost)
+            {
+                bestNode = seeableNode;
+                smallestCost = totalCost;
+            }
+        }
+
+        return bestNode;
     }
 }
