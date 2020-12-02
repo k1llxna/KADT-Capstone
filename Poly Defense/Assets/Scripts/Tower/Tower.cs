@@ -21,6 +21,8 @@ public class Tower : MonoBehaviour
     public GameObject bulletPrefab;
     public Transform firePoint;
 
+    public int bulletsPerShot;
+
     // Start is called before the first frame update
     void Start()
     {
