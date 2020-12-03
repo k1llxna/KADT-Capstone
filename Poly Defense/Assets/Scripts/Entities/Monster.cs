@@ -189,6 +189,9 @@ public class Monster : MonoBehaviour
         //Kill
         Destroy(gameObject);
     }
+    public void Explode(Vector3 position)
+    {
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -207,4 +210,5 @@ public class Monster : MonoBehaviour
             target = null;
         }
     }
+
 }

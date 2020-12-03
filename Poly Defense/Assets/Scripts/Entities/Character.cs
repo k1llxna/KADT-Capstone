@@ -15,10 +15,13 @@ public class Character : MonoBehaviourPun
     bool isGrounded;
 
     public float health;
+    public int maxMana;
+    int mana = 0;
 
     Vector3 moveDirection = Vector3.zero;
 
     public GameObject[] towers;
+    public Ability[] abilities;
     protected bool building;
 
     enum ControllerType {  SimpleMove, Move };
@@ -27,9 +30,18 @@ public class Character : MonoBehaviourPun
     int maxMoney = 100;
     public int money;
 
+    float manaRefreshRate = 0;
+    int manaRefreshCooldown = 3; //How long till recharge
+    float manaRefreshTime = 0; //Time till cooldown is over
+    int manaGain = 1; //How much per Tick
+
     // Start is called before the first frame update
     void Start()
     {
+        //Always start with mana regen
+        manaRefreshTime = 3;
+        mana = 20;
+
         controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
 
@@ -72,11 +84,20 @@ public class Character : MonoBehaviourPun
         {
             if (Input.GetKeyDown("1"))
                 StartCoroutine(Building(0));
-            else if(Input.GetKeyDown("2"))
+            else if (Input.GetKeyDown("2"))
                 StartCoroutine(Building(1));
             else if (Input.GetKeyDown("3"))
                 StartCoroutine(Building(2));
-            else if (Input.GetKeyDown("3"))
+            else if (Input.GetKeyDown("4"))
+                StartCoroutine(Building(3));
+
+            else if (Input.GetKeyDown("5"))
+                abilities[0].Use(this);
+            else if (Input.GetKeyDown("6"))
+                StartCoroutine(Building(1));
+            else if (Input.GetKeyDown("7"))
+                StartCoroutine(Building(2));
+            else if (Input.GetKeyDown("8"))
                 StartCoroutine(Building(3));
 
 
@@ -92,6 +113,8 @@ public class Character : MonoBehaviourPun
             isGrounded = true;
             animator.SetBool("Grounded", true);
         }
+
+        UpdateMana();
     }
 
     IEnumerator Building(int towerNum)
@@ -101,47 +124,49 @@ public class Character : MonoBehaviourPun
         //Break if we dont have enough money
         if (money < tower.cost)
         {
+            Debug.Log("Dont have enough mana to build tower");
             //Play error sound
-            StopCoroutine(Building(towerNum));
         }
+        else
+        {
+            //We can only raycast to the ground
+            LayerMask ground = 1 << 9;
 
-        //We can only raycast to the ground
-        LayerMask ground = 1 << 9;
+            bool hasBuilt = false;
+            building = true;
 
-        bool hasBuilt = false;
-        building = true;
+            //This would be a tempTower array, and will instantiate the real tower later
+            GameObject towerObject = Instantiate(towers[0], new Vector3(100, 100, 100), transform.rotation);
 
-        //This would be a tempTower array, and will instantiate the real tower later
-        GameObject towerObject = Instantiate(towers[0], new Vector3(100, 100, 100), transform.rotation);
+            RaycastHit hit;
+            Vector3 offset = new Vector3(0, 1, 0);
+            Vector3 towerOffset = new Vector3(0, 0.5f, 0);
 
-        RaycastHit hit;
-        Vector3 offset = new Vector3(0, 1, 0);
-        Vector3 towerOffset = new Vector3(0, 0.5f, 0);
-
-        while (!hasBuilt)
-        {        
-            Debug.DrawRay(transform.position + offset, Camera.main.transform.TransformDirection(Vector3.forward) * 5, Color.red);
-
-            if (Physics.Raycast(transform.position + offset, Camera.main.transform.TransformDirection(Vector3.forward), out hit, 5, ground))
+            while (!hasBuilt)
             {
-                tower.transform.position = hit.point + towerOffset;
-                tower.transform.rotation = transform.rotation;
+                Debug.DrawRay(transform.position + offset, Camera.main.transform.TransformDirection(Vector3.forward) * 5, Color.red);
+
+                if (Physics.Raycast(transform.position + offset, Camera.main.transform.TransformDirection(Vector3.forward), out hit, 5, ground))
+                {
+                    towerObject.transform.position = hit.point + towerOffset;
+                    towerObject.transform.rotation = transform.rotation;
+                }
+
+                if (Input.GetMouseButton(0))
+                {
+                    print("finished building");
+                    money -= tower.cost;
+                    hasBuilt = true;
+                }
+
+                yield return new WaitForEndOfFrame();
             }
 
-            if (Input.GetMouseButton(0))
-            {
-                print("finished building");
-                money -= tower.cost;
-                hasBuilt = true;
-            }
+            //While(!hasTurned)
+            //allow option for fine rotatating of the newly built tower
 
-            yield return new WaitForEndOfFrame();
+            building = false;
         }
-
-        //While(!hasTurned)
-        //allow option for fine rotatating of the newly built tower
-
-        building = false;
     }
 
     protected void Move()
@@ -203,6 +228,30 @@ public class Character : MonoBehaviourPun
     }
 
     public virtual void Attack(){ }
+
+    public void UpdateMana()
+    {
+        //If we are within the cooldown time increase mana
+        if(manaRefreshTime >= manaRefreshCooldown)
+        {
+            //Only increase if the tick is over and we are not full mana
+            if (manaRefreshRate >= 0.4f && mana < maxMana)
+            {
+                mana += manaGain;
+                manaRefreshRate = 0;
+            }
+            else
+            {   
+                //Add time to tick rate
+                manaRefreshRate += Time.deltaTime;
+            }
+        }
+        else
+        {
+            //Add time to cooldown
+            manaRefreshTime += Time.deltaTime;
+        }
+    }
 
     protected void Target()
     {
@@ -360,5 +409,16 @@ public class Character : MonoBehaviourPun
     public int GetMoney()
     {
         return money;
+    }
+
+    public int GetMana()
+    {
+        return mana;
+    }
+
+    public void UseMana(int cost)
+    {
+        mana -= cost;
+        manaRefreshTime = 0;
     }
 }
