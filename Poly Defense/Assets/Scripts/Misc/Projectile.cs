@@ -6,13 +6,12 @@ public class Projectile : MonoBehaviour
 {
     public float damage;
 
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(UnityEngine.Collision collision)
     {
-        if(other.tag.Equals("Enemy")){
-            other.GetComponent<Monster>().TakeDamage(damage);
+        if (collision.gameObject.tag.Equals("Enemy"))
+        {
+            collision.gameObject.GetComponent<Monster>().TakeDamage(damage);
         }
-
-        Debug.Log(other);
 
         Destroy(gameObject, 0.1f);
     }

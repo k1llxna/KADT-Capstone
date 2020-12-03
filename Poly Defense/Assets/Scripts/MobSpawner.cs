@@ -1,16 +1,21 @@
-﻿using System.Collections;
+﻿using Photon.Pun;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class MobSpawner : MonoBehaviour
 {
     public List<Transform> spawnPoints;
-    public GameObject enemy;
 
 
     private void Start()
     {
-        StartCoroutine(Spawn());
+        if (PhotonNetwork.IsMasterClient)
+        {
+            StartCoroutine(Spawn());
+        }
+        
     }
 
     IEnumerator Spawn()
@@ -19,7 +24,7 @@ public class MobSpawner : MonoBehaviour
         {
             foreach (Transform t in spawnPoints)
             {
-                Instantiate(enemy, t.position, Quaternion.identity, transform);
+                PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "ServerEnemy"), t.position, Quaternion.identity);
             }
 
             yield return new WaitForSeconds(5f);

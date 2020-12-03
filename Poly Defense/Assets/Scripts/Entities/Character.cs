@@ -19,10 +19,13 @@ public class Character : MonoBehaviourPun
     Vector3 moveDirection = Vector3.zero;
 
     public GameObject[] towers;
-    bool building;
+    protected bool building;
 
     enum ControllerType {  SimpleMove, Move };
     [SerializeField] ControllerType type;
+
+    int maxMoney = 100;
+    public int money;
 
     // Start is called before the first frame update
     void Start()
@@ -67,8 +70,15 @@ public class Character : MonoBehaviourPun
 
         if (!building)
         {
-            if (Input.GetKeyDown("k"))
-                StartCoroutine("Building");
+            if (Input.GetKeyDown("1"))
+                StartCoroutine(Building(0));
+            else if(Input.GetKeyDown("2"))
+                StartCoroutine(Building(1));
+            else if (Input.GetKeyDown("3"))
+                StartCoroutine(Building(2));
+            else if (Input.GetKeyDown("3"))
+                StartCoroutine(Building(3));
+
 
             if (Input.GetMouseButtonDown(0))
                 Attack();
@@ -80,18 +90,29 @@ public class Character : MonoBehaviourPun
         if(controller.isGrounded)
         {
             isGrounded = true;
+            animator.SetBool("Grounded", true);
         }
     }
 
-    IEnumerator Building()
+    IEnumerator Building(int towerNum)
     {
+        OTower tower = towers[towerNum].GetComponent<OTower>();
+
+        //Break if we dont have enough money
+        if (money < tower.cost)
+        {
+            //Play error sound
+            StopCoroutine(Building(towerNum));
+        }
+
+        //We can only raycast to the ground
         LayerMask ground = 1 << 9;
 
         bool hasBuilt = false;
         building = true;
 
         //This would be a tempTower array, and will instantiate the real tower later
-        GameObject tower = Instantiate(towers[0], new Vector3(100, 100, 100), transform.rotation);
+        GameObject towerObject = Instantiate(towers[0], new Vector3(100, 100, 100), transform.rotation);
 
         RaycastHit hit;
         Vector3 offset = new Vector3(0, 1, 0);
@@ -110,6 +131,7 @@ public class Character : MonoBehaviourPun
             if (Input.GetMouseButton(0))
             {
                 print("finished building");
+                money -= tower.cost;
                 hasBuilt = true;
             }
 
@@ -122,7 +144,7 @@ public class Character : MonoBehaviourPun
         building = false;
     }
 
-    private void Move()
+    protected void Move()
     {
         switch (type)
         {
@@ -140,10 +162,28 @@ public class Character : MonoBehaviourPun
                     moveDirection *= speed;
 
                     if (Input.GetButtonDown("Jump"))
+                    {
                         moveDirection.y = jumpSpeed;
+                        isGrounded = false;
+                        animator.SetBool("Grounded", false);
+                    }
+
+                }
+                else
+                {
+                    float tempY = moveDirection.y;
+
+                    moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+
+                    moveDirection = transform.TransformDirection(moveDirection);
+
+                    moveDirection *= speed;
+
+                    moveDirection = new Vector3(moveDirection.x, tempY, moveDirection.z);
+
+                    moveDirection.y -= gravity * Time.deltaTime;
                 }
 
-                moveDirection.y -= gravity * Time.deltaTime;
 
                 controller.Move(moveDirection * Time.deltaTime);
 
@@ -164,7 +204,7 @@ public class Character : MonoBehaviourPun
 
     public virtual void Attack(){ }
 
-    void Target()
+    protected void Target()
     {
         RaycastHit hit;
         Vector3 offset = new Vector3(0, 1, 0);
@@ -186,6 +226,43 @@ public class Character : MonoBehaviourPun
 
                 Debug.DrawRay(transform.position + offset, Camera.main.transform.TransformDirection(Vector3.forward) * hit.distance, Color.blue);
             }
+
+            if (hit.transform.tag.Equals("Tower"))
+            {
+                TowerUIController uihandler = hit.transform.gameObject.GetComponent<TowerUIController>();
+                OTower tower = hit.transform.gameObject.GetComponent<OTower>();
+
+                if (Mathf.Abs((transform.position - hit.transform.position).magnitude) <= 10)
+                {                     
+                    uihandler.StopAllCoroutines();
+                    uihandler.StartCoroutine("ShowUI");
+
+                    //Keeps HealthBar Roughly the same size throughout
+                    float size = (transform.position - hit.transform.position).magnitude / 100;
+                    if (size < 0.08)
+                        size = 0.08f;
+
+                    uihandler.panel.transform.localScale = new Vector3(size, size, size);
+
+                    Debug.DrawRay(transform.position + offset, Camera.main.transform.TransformDirection(Vector3.forward) * hit.distance, Color.green);
+                }
+
+                if(Input.GetKeyDown("g"))
+                {
+                    StartCoroutine(UpgradeBuilding(tower, uihandler));
+                }
+
+                else if(Input.GetKeyDown("e"))
+                {
+                    StartCoroutine(RepairBuilding(tower));
+                }
+
+                else if(Input.GetKeyDown("v"))
+                {
+                    StartCoroutine(SellBuilding(tower, uihandler));
+                }
+
+            }
         }
         else
         {
@@ -193,9 +270,95 @@ public class Character : MonoBehaviourPun
         }
     }
 
+    IEnumerator UpgradeBuilding(OTower tower, TowerUIController UIController)
+    {
+        float timeElapsed = 0;
+        float timeToUpgrade = tower.level * 6;
+
+        UIController.upgradeBar.maxValue = timeToUpgrade;
+        UIController.upgradeBar.gameObject.SetActive(true);
+
+        while (Input.GetKey("g"))
+        {
+            timeElapsed += Time.deltaTime;
+
+            UIController.upgradeBar.value = timeElapsed;
+
+            if (timeElapsed >= timeToUpgrade)
+            {
+                tower.Upgrade();
+                UIController.upgradeBar.value = 0;
+                UIController.upgradeBar.gameObject.SetActive(false);
+                break;
+            }
+
+            yield return new WaitForEndOfFrame();
+        }
+
+        UIController.upgradeBar.value = 0;
+        UIController.upgradeBar.gameObject.SetActive(false);
+    }
+
+    IEnumerator SellBuilding(OTower tower, TowerUIController UIController)
+    {
+        float timeElapsed = 0;
+        float timeToUpgrade = 2;
+
+        UIController.sellBar.maxValue = timeToUpgrade;
+        UIController.sellBar.gameObject.SetActive(true);
+
+        while (Input.GetKey("v"))
+        {
+            timeElapsed += Time.deltaTime;
+
+            UIController.sellBar.value = timeElapsed;
+
+            if (timeElapsed >= timeToUpgrade)
+            {
+                tower.Sell(this);
+                UIController.sellBar.value = 0;
+                UIController.sellBar.gameObject.SetActive(false);
+                break;
+            }
+
+            yield return new WaitForEndOfFrame();
+        }
+
+        UIController.sellBar.value = 0;
+        UIController.sellBar.gameObject.SetActive(false);
+    }
+
+    IEnumerator RepairBuilding(OTower tower)
+    {
+        while (Input.GetKey("e"))
+        {
+            tower.Repair();
+            money -= 1;
+
+            if (tower.health == tower.maxHealth)
+            {
+                break;
+            }
+
+            //Cant repair too fast
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
+
     //Take damage based on damage that was dealt
     public void TakeDamage(int damage)
     {
         health -= damage;
+    }
+
+    public void GiveMoney(int amount)
+    {
+        money += amount;
+    }
+
+    public int GetMoney()
+    {
+        return money;
     }
 }

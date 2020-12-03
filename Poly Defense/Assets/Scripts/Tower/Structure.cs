@@ -5,7 +5,7 @@ using UnityEngine;
 public class Structure : MonoBehaviour
 {
     public int maxHealth;
-    int health;
+    public int health;
 
     public void TakeDamage(int damage)
     {
