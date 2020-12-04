@@ -17,5 +17,5 @@ public class Node<T>
 
     public T Value { get; set; }
 
-    public NodeList<T> Neighbors { get; set; }
+    public NodeList<T> Neighbors { get; set; } //Actual Neighbours
 }

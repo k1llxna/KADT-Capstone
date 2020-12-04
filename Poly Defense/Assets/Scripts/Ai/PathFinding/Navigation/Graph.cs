@@ -23,6 +23,11 @@ public class Graph<T>
         }
     }
 
+    public void Reset()
+    {
+        nodeSet.Clear();        
+    }
+
     public void AddNode(GraphNode<T> node)
     {
         nodeSet.Add(node);

@@ -11,7 +11,8 @@ public class ExplosionBallAbility : Ability
         if (player.GetMana() >= cost)
         {
             player.UseMana(cost);
-            GameObject newB = Instantiate(prefab, transform.position + new Vector3(0, 1, 0), Camera.main.transform.rotation);
+            ExplosionBall newB = Instantiate(prefab, transform.position + new Vector3(0, 1, 0), Camera.main.transform.rotation).GetComponent<ExplosionBall>();
+            newB.damage = damage;
         }
         else
         {

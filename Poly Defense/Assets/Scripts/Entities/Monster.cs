@@ -28,11 +28,13 @@ public class Monster : MonoBehaviour
     public TextMeshProUGUI healthText;
 
     public GameObject dropOnDeath;
+    public Rigidbody rb;
 
     // Start is called before the first frame update
     void Start()
     {
         animator = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody>();
 
         body.position = transform.position;
         health = maxHealth;
@@ -187,10 +189,12 @@ public class Monster : MonoBehaviour
         }
 
         //Kill
-        Destroy(gameObject);
+        Destroy(gameObject, 2f);
     }
-    public void Explode(Vector3 position)
+    public void Explode(Vector3 position, int damage)
     {
+        rb.AddExplosionForce(20, position, 100, 2, ForceMode.Impulse);
+        TakeDamage(damage);
     }
 
     private void OnTriggerEnter(Collider other)

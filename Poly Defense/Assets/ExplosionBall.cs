@@ -7,30 +7,35 @@ public class ExplosionBall : MonoBehaviour
     public Vector3 force;
     Rigidbody rb;
 
+    public int damage;
+
     SphereCollider collider;
+    Animator animator;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
 
         rb.AddRelativeForce(force, ForceMode.Impulse);
+        animator = GetComponent<Animator>();
     }
 
     private void OnCollisionEnter(UnityEngine.Collision collision)
     {
         //Explode
+        animator.SetTrigger("Explode");
         //Stop movement
         rb.velocity = Vector3.zero;
-        //Turn off collision
-        collider.enabled = false;
 
-        if (collision.transform.tag.Equals("Enemy"))
+        Destroy(gameObject, 0.33f);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.tag.Equals("Enemy"))
         {
-            collision.gameObject.GetComponent<Monster>();
-            //Monster.Explode(transform.position);
+            Monster enemy = other.GetComponent<Monster>();
+            enemy.Explode(transform.position, damage);
         }
-
-
-        Destroy(gameObject, 1f);
     }
 }

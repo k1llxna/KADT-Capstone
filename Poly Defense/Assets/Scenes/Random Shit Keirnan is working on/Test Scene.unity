@@ -2356,7 +2356,7 @@ GameObject:
   - component: {fileID: 564584041}
   - component: {fileID: 564584040}
   m_Layer: 8
-  m_Name: Abilities (1)
+  m_Name: ExplosionAbility
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

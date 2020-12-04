@@ -11,6 +11,10 @@ public class MonoGraph : MonoBehaviour
 
     public Color neighbourColor;
 
+    public GameObject blocker;
+
+    public MonoNode p;
+
     void Awake()
     {
         nodes = FindObjectsOfType<MonoNode>();
@@ -44,11 +48,67 @@ public class MonoGraph : MonoBehaviour
     {
         foreach(Node<MonoNode> node in nodeSet)
         {
-            foreach(Node<MonoNode> neighbourNode in graph.Neighbours(node))
+            if (node.Value.isEnabled)
             {
-                Debug.DrawLine(node.Value.transform.position, neighbourNode.Value.transform.position, neighbourColor);
+                foreach (Node<MonoNode> neighbourNode in graph.Neighbours(node))
+                {
+                    Debug.DrawLine(node.Value.transform.position, neighbourNode.Value.transform.position, neighbourColor);
+                }
             }
         }
+
+
+        if (Input.GetKeyDown("f"))
+        {
+            p.Disable();
+            blocker.SetActive(true);
+            UpdateGraph();
+        }
+
+        if (Input.GetKeyDown("g"))
+        {
+            p.Enable();
+            blocker.SetActive(false);
+            UpdateGraph();
+        }
+    }
+
+    //ResetGraph
+    public void UpdateGraph()
+    {
+        graph.Reset();
+
+        graph = new Graph<MonoNode>();
+        
+        //Create Graph
+        graph = new Graph<MonoNode>(nodeSet);
+
+        //Populate NodeSet
+        foreach (MonoNode node in nodes)
+        {
+            GraphNode<MonoNode> newNode = new GraphNode<MonoNode>(node);
+            newNode.Value = node;
+            nodeSet.Add(newNode);
+        }
+
+        //Set GraphNode Neighbours
+        foreach (GraphNode<MonoNode> gNode in nodeSet)
+        {
+            if (gNode.Value.isEnabled)
+            {
+                foreach (MonoNode mNode in gNode.Value.TrueNeighbours)
+                {
+
+                    GraphNode<MonoNode> neghbouringNode = (GraphNode<MonoNode>)nodeSet.FindByValue(mNode);
+
+                    float cost = (mNode.cost + gNode.Value.cost);
+
+                    graph.AddDirectedEdge(gNode, neghbouringNode, Mathf.RoundToInt(cost));
+
+                }
+            }
+        }
+        
     }
 
     //Return the absolute closest node
@@ -59,35 +119,18 @@ public class MonoGraph : MonoBehaviour
 
         foreach(Node<MonoNode> node in nodeSet)
         {
-            if (Mathf.Abs((node.Value.transform.position - transform.position).magnitude) < distance)
+            if (node.Value.isEnabled)
             {
-                
-                //If the node can see the transform it is a valid node -- Object cannot use a close node that is behind a wall
-                Ray ray = new Ray(node.Value.transform.position + Vector3.up, (transform.position - (node.Value.transform.position + Vector3.up)).normalized);
-                RaycastHit hit;
-
-                if(Physics.Raycast(ray.origin, ray.direction * 100, out hit, 100f))
+                if (Mathf.Abs((node.Value.transform.position - transform.position).magnitude) < distance)
                 {
-                    if(hit.transform == transform)
-                    {
-                        closestNode = node;
-                        distance = Mathf.Abs((node.Value.transform.position - transform.position).magnitude);
-                        Debug.DrawLine(ray.origin, hit.point, Color.red, 1f);
-                    }
-                    else
-                    {
-                        Debug.DrawRay(ray.origin, ray.direction * 100, Color.green, 1f);
-                        
-                    }
-
-                    print(hit.transform);
-                }
-                else
-                {
-                    Debug.DrawRay(ray.origin, ray.direction * 100, Color.yellow, 1f);
+                    closestNode = node;
+                    distance = Mathf.Abs((node.Value.transform.position - transform.position).magnitude);
                 }
             }
         }
+
+        Debug.DrawLine(transform.position, closestNode.Value.transform.position, Color.red, 1f);
+
         return closestNode;
     }
 
@@ -96,24 +139,16 @@ public class MonoGraph : MonoBehaviour
     {
         List<Node<MonoNode>> seeableNodes = new List<Node<MonoNode>>();
 
-        foreach (Node<MonoNode> node in nodeSet)
+        Node<MonoNode> closestNode = FindClosestNode(transform);
+        
+        foreach(Node<MonoNode> node in closestNode.Neighbors)
         {
-            //If the node can see the transform it is a valid node -- Object cannot use a close node that is behind a wall
-            //Add that node to the seeable nodes list
-            Ray ray = new Ray(node.Value.transform.position + Vector3.up, (transform.position - (node.Value.transform.position + Vector3.up)).normalized);
-            RaycastHit hit;
-            if (Physics.Raycast(ray.origin, ray.direction * 100, out hit, 100f))
-            {
-                if (hit.collider.transform == transform)
-                {
-                    seeableNodes.Add(node);
-                    Debug.DrawRay(ray.origin, ray.direction * 100, Color.red, 1f);
-                }               
-            }
-            else
-            {
-                Debug.DrawRay(ray.origin, ray.direction * 100, Color.yellow, 1f);
-            }
+            seeableNodes.Add(node);
+        }
+
+        foreach (Node<MonoNode> node in seeableNodes)
+        {
+            print(node.Value);
         }
 
         int smallestCost = int.MaxValue;
@@ -122,25 +157,29 @@ public class MonoGraph : MonoBehaviour
         //Now we had a list of seeable Nodes -- time to find the best node out of all of them
         foreach (Node<MonoNode> seeableNode in seeableNodes)
         {
-            var camefrom = GraphSearch<MonoNode>.BFS(graph, seeableNode, goal);
-            Node<MonoNode> currentNode = goal;
-
-            int totalCost = 0;
-
-            while (currentNode != seeableNode)
+            if (seeableNode.Value.isEnabled)
             {
-                totalCost += currentNode.Value.cost;
+                var camefrom = GraphSearch<MonoNode>.Dijkstra(graph, seeableNode, goal);
+                Node<MonoNode> currentNode = goal;
 
-                camefrom.TryGetValue(currentNode, out currentNode);
-            }
+                int totalCost = 0;
 
-            if(totalCost < smallestCost)
-            {
-                bestNode = seeableNode;
-                smallestCost = totalCost;
+                while (currentNode != seeableNode)
+                {
+                    totalCost += currentNode.Value.cost;
+
+                    camefrom.TryGetValue(currentNode, out currentNode);
+                }
+
+                if (totalCost < smallestCost)
+                {
+                    bestNode = seeableNode;
+                    smallestCost = totalCost;
+                }
             }
         }
 
+        Debug.DrawLine(transform.position, bestNode.Value.transform.position, Color.green, 1f);
         return bestNode;
     }
 }
