@@ -12,6 +12,11 @@ public class Enemy : MonoBehaviour
     public float slowRadius = 2f;
     public float timeToTarget = 0.1f;
 
+    public int health = 100;
+    public int value = 10;
+    public GameObject deathEffect;
+
+
     private Transform target;
     private int wavepointIndex = 0;
     [SerializeField]
@@ -23,6 +28,22 @@ public class Enemy : MonoBehaviour
         vel = Vector3.zero;
     }
 
+    public void TakeDamage(int amount)
+    {
+        health -= amount;
+        if (health <= 0)
+        {
+            Die();
+        }
+    }
+
+    void Die()
+    {
+        GameObject effect = (GameObject)Instantiate(deathEffect, transform.position, Quaternion.identity);
+        Destroy(effect, 3f);
+        PlayerStats.Money += value;
+        Destroy(gameObject);
+    }
     void Update()
     {
         Vector3 dir = target.position - transform.position; // direction to target
@@ -46,17 +67,20 @@ public class Enemy : MonoBehaviour
     {
         if (wavepointIndex >= Waypoints.waypoints.Length - 1)
         {
-            Destroy(gameObject);
+            EndPath();
         }
         wavepointIndex++;
         target = Waypoints.waypoints[wavepointIndex];
     }
+
+    void EndPath()
+    {
+        PlayerStats.Lives--;
+    }
 }
 
 /*
-     
-        
-        ////////////////////////////////////////////////////
+        ///////////////////////    AI stuff    /////////////////////////////
 
         Vector3 dir = target.position - transform.position;
         transform.Translate(dir.normalized * speed * Time.deltaTime, Space.World);

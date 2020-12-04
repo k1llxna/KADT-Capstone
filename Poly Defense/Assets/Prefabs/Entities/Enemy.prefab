@@ -115,4 +115,8 @@ MonoBehaviour:
   targetRadius: 100
   slowRadius: 3
   timeToTarget: 0.1
+  health: 100
+  value: 10
+  deathEffect: {fileID: 3367834758312499990, guid: a66c2ff7d0c377746b5dd77d58f49108,
+    type: 3}
   vel: {x: 0, y: 0, z: 0}

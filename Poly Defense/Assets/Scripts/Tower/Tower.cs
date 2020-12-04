@@ -76,10 +76,6 @@ public class Tower : MonoBehaviour
         }
 
         fireCountdown -= Time.deltaTime;
-        //if(health <= 0)
-        //{
-        //    Destroy(gameObject);
-        //}
     }
 
     void Shoot()

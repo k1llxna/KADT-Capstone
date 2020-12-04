@@ -5,6 +5,7 @@ public class Tower_Bullet_Default : MonoBehaviour
     // target to persue
     private Transform target;
     public float speed = 50f;
+    public int damage = 50;
     // public GameObject impactEffect
 
     public void Seek(Transform target_)
@@ -35,13 +36,19 @@ public class Tower_Bullet_Default : MonoBehaviour
 
     }
 
+    void Damage(Transform enemy)
+    {
+        Enemy e = enemy.GetComponent<Enemy>();
+        if (e != null)
+        {
+            e.TakeDamage(damage);
+        }
+    }
     void  HitTarget()
     {
         // add effect here
-        //GameObject effect = (GameObject)Instantiate(impactEffect, transform.position, transform.rotation);
+        // GameObject effect = (GameObject)Instantiate(impactEffect, transform.position, transform.rotation);
         // Destroy(effect, 2f);
 
-        Destroy(target.gameObject);
-        Destroy(gameObject);
     }
 }
