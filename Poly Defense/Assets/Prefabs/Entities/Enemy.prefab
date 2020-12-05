@@ -106,15 +106,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9b4d38af7fbc244f8199006638403ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
-  maxSpeed: 10
+  speed: 50
+  maxSpeed: 100
   mass: 1
   maxVel: 10
   maxForce: 20
   maxAccel: 6
   targetRadius: 100
   slowRadius: 3
-  timeToTarget: 0.1
+  timeToTarget: 1
   health: 100
   value: 10
   deathEffect: {fileID: 3367834758312499990, guid: a66c2ff7d0c377746b5dd77d58f49108,

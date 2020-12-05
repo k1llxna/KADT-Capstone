@@ -12,7 +12,7 @@ public class Enemy : MonoBehaviour
     public float slowRadius = 2f;
     public float timeToTarget = 0.1f;
 
-    public int health = 100;
+    public int health = 3;
     public int value = 10;
     public GameObject deathEffect;
 

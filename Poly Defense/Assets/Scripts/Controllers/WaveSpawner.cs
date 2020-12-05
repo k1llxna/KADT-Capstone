@@ -10,7 +10,6 @@ public class WaveSpawner : MonoBehaviour
     public float waveIntermission = 5.5f;
     public Text waveCountText;
 
-
     private float countDown = 2f;
     private int waveNumber = 0;
 
@@ -33,7 +32,7 @@ public class WaveSpawner : MonoBehaviour
     IEnumerator SpawnWave()
     {
         waveNumber++;
-
+        PlayerStats.Rounds++;
         Debug.Log("Wave incoming");
         for (int i = 0; i < waveNumber; i++)
         {
