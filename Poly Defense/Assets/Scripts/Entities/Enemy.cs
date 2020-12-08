@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
+    [Header("Variabes")]
     public float speed = 7f;
     public float maxSpeed = 10f;
     public float mass = 1;
@@ -12,10 +14,15 @@ public class Enemy : MonoBehaviour
     public float slowRadius = 2f;
     public float timeToTarget = 0.1f;
 
-    public int health = 3;
+    public int startHealth = 100;
+
+    public float health;
+
     public int value = 10;
     public GameObject deathEffect;
 
+    [Header("Unity Stuff")]
+    public Image healthBar;
 
     private Transform target;
     private int wavepointIndex = 0;
@@ -26,11 +33,13 @@ public class Enemy : MonoBehaviour
     {
         target = Waypoints.waypoints[0];
         vel = Vector3.zero;
+        health = startHealth;
     }
 
     public void TakeDamage(int amount)
     {
         health -= amount;
+        healthBar.fillAmount = health / startHealth;
         if (health <= 0)
         {
             Die();
