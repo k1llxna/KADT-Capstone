@@ -8955,6 +8955,12 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: SelectLaserTurret
       objectReference: {fileID: 0}
+    - target: {fileID: 5774447215000130619, guid: 9684c6f18b035cd4ebf39db71f31aa0b,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: d9464cbb20c05234ba97eaf7849642ca,
+        type: 3}
     - target: {fileID: 5774447215000130620, guid: 9684c6f18b035cd4ebf39db71f31aa0b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -13560,6 +13566,12 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: SelectSniperTurret
       objectReference: {fileID: 0}
+    - target: {fileID: 5774447215000130619, guid: 9684c6f18b035cd4ebf39db71f31aa0b,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 3854f952531d93c4da3dcbf155a08c7a,
+        type: 3}
     - target: {fileID: 5774447215000130620, guid: 9684c6f18b035cd4ebf39db71f31aa0b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -19569,6 +19581,12 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: SelectMissileTurret
       objectReference: {fileID: 0}
+    - target: {fileID: 5774447215000130619, guid: 9684c6f18b035cd4ebf39db71f31aa0b,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 03c7cfaf7450cdb4f9617f0729413972,
+        type: 3}
     - target: {fileID: 5774447215000130620, guid: 9684c6f18b035cd4ebf39db71f31aa0b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -21467,6 +21485,12 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 605690384}
+    - target: {fileID: 5774447215000130619, guid: 9684c6f18b035cd4ebf39db71f31aa0b,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 15e764e59b5bb9c4ea3f79304bb97c39,
+        type: 3}
     - target: {fileID: 5774447215000130620, guid: 9684c6f18b035cd4ebf39db71f31aa0b,
         type: 3}
       propertyPath: m_LocalPosition.x
