@@ -3,7 +3,9 @@
 public class Shop : MonoBehaviour
 {
     public TurretBlueprint standardTurret;
-    public TurretBlueprint anotherTurret;
+    public TurretBlueprint missileLauncherTurret;
+    public TurretBlueprint laserTurret;
+    public TurretBlueprint sniperTurret;
 
     BuildManager buildManager;
 
@@ -19,8 +21,18 @@ public class Shop : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    public void SelectAnotherTurret()
+    public void SelectMissileTurret()
     {
-        buildManager.SelectTurretToBuild(anotherTurret);
+        buildManager.SelectTurretToBuild(missileLauncherTurret);
+    }
+
+    public void SelectLaserTurret()
+    {
+        buildManager.SelectTurretToBuild(laserTurret);
+    }
+
+    public void SelectSniperTurret()
+    {
+        buildManager.SelectTurretToBuild(sniperTurret);
     }
 }

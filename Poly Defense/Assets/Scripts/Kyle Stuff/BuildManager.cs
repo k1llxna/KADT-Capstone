@@ -17,7 +17,9 @@ public class BuildManager : MonoBehaviour
     }
 
     public GameObject standardTurretPrefab;
-    public GameObject anotherTurretPrefab;
+    public GameObject missileLauncherTurretPrefab;
+    public GameObject laserTurretPrefab;
+    public GameObject sniperTurretPrefab;
     public GameObject buildEffect;
     public GameObject sellEffect;
 
