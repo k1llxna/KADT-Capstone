@@ -88,13 +88,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7403371095599298828}
-  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_LocalRotation: {x: 0.5, y: 0.5, z: 0.5, w: 0.5}
   m_LocalPosition: {x: -0, y: 1, z: -0.06}
   m_LocalScale: {x: 1.2827007, y: 1.2827005, z: 1.2827016}
   m_Children: []
   m_Father: {fileID: 6579745106217038879}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 90}
 --- !u!33 &1879928208360857001
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -305,3 +305,9 @@ MonoBehaviour:
     type: 3}
   firePoint: {fileID: 2255057454834373818}
   bulletsPerShot: 0
+  dmgOverTime: 20
+  useLaser: 0
+  lineRenderer: {fileID: 0}
+  impactEffect: {fileID: 0}
+  impactLight: {fileID: 0}
+  slowRatio: 0.5

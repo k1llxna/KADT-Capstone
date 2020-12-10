@@ -18,6 +18,4 @@ public class PlayerStats : MonoBehaviour
 
         Rounds = 0;
     }
-
-    
 }
