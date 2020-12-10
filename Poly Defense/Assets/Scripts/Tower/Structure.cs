@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class Structure : MonoBehaviour
+public class Structure : MonoBehaviourPun
 {
     public int maxHealth;
     public int health;
@@ -15,7 +16,7 @@ public class Structure : MonoBehaviour
             Die();
     }
 
-    void Die()
+    public virtual void Die()
     {
         Destroy(gameObject);
     }

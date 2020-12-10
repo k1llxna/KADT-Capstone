@@ -10,14 +10,14 @@ public class GraphNode<T> : Node<T>
     public GraphNode(T value) : base(value) { }
     public GraphNode(T value, NodeList<T> neighbors) : base(value, neighbors) { }
 
-    new public NodeList<T> Neighbors
+    new public NodeList<T> Neighbours
     {
         get
         {
-            if (base.Neighbors == null)
-                base.Neighbors = new NodeList<T>();
+            if (base.Neighbours == null)
+                base.Neighbours = new NodeList<T>();
 
-            return base.Neighbors;
+            return base.Neighbours;
         }
     }
 

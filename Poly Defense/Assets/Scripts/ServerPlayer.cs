@@ -1,66 +1,12 @@
 ﻿using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
-public class ServerPlayer : MonoBehaviourPun
+public class ServerPlayer : Character
 {
-    protected CharacterController controller;    
-    protected Animator animator;
-
-    //public Transform playerTransform;
-    public float speed;
-    public float jumpSpeed;
-    public float rotationSpeed; // Used when not using MouseLook.CS to rotate character
-    public float gravity;
-    protected bool isGrounded;
-    
-
-    public float health;
-
-    protected Vector3 moveDirection = Vector3.zero;
-
-    public GameObject[] towers;
-    protected bool building;
-
-    protected enum ControllerType { SimpleMove, Move };
-    [SerializeField] protected ControllerType type;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        controller = GetComponent<CharacterController>();
-        animator = GetComponent<Animator>();
-
-        Physics.IgnoreLayerCollision(8, 8, true);
-
-        if (speed <= 0)
-        {
-            speed = 6.0f;
-            Debug.Log("Speed not set on " + name + " defaulting to " + speed);
-        }
-
-        if (jumpSpeed <= 0)
-        {
-            jumpSpeed = 8.0f;
-            Debug.Log("JumpSpeed not set on " + name + " defaulting to " + jumpSpeed);
-        }
-
-        if (rotationSpeed <= 0)
-        {
-            rotationSpeed = 10.0f;
-            Debug.Log("RotationSpeed not set on " + name + " defaulting to " + rotationSpeed);
-        }
-
-        if (gravity <= 0)
-        {
-            gravity = 9.81f;
-            Debug.Log("Gravity not set on " + name + " defaulting to " + gravity);
-        }
-
-        moveDirection = Vector3.zero;
-    }
 
     // Update is called once per frame
     void Update()
@@ -71,61 +17,45 @@ public class ServerPlayer : MonoBehaviourPun
 
             if (!building)
             {
-                if (Input.GetKeyDown("k"))
-                    StartCoroutine("Building");
+
+                if (Input.GetKeyDown("1"))
+                    StartCoroutine(Building(0));
+                else if (Input.GetKeyDown("2"))
+                    StartCoroutine(Building(1));
+                else if (Input.GetKeyDown("3"))
+                    StartCoroutine(Building(2));
+                else if (Input.GetKeyDown("4"))
+                    StartCoroutine(Building(3));
+
+
+                else if (Input.GetKeyDown("5"))
+                    abilities[0].Use(this);
+                else if (Input.GetKeyDown("6"))
+                    abilities[0].Use(this);
+                else if (Input.GetKeyDown("7"))
+                    abilities[0].Use(this);
+                else if (Input.GetKeyDown("8"))
+                    abilities[0].Use(this);
 
                 if (Input.GetMouseButtonDown(0))
                     photonView.RPC("Attack", RpcTarget.All, transform.position, Camera.main.transform.rotation);
 
                 //Get information of targeted object with raycast
                 Target();
-            }      
+            }
+
+            if (controller.isGrounded)
+            {
+                isGrounded = true;
+                photonView.RPC("RPC_SetGrounded", RpcTarget.All, true);
+            }
+
+
+            UpdateMana();
         }
     }
 
-    protected IEnumerator Building()
-    {
-        LayerMask ground = 1 << 9;
-
-        bool hasBuilt = false;
-        building = true;
-
-        //This would be a tempTower array, and will instantiate the real tower later
-        GameObject tower = Instantiate(towers[0], new Vector3(100,100,100), transform.rotation);
-
-        RaycastHit hit;
-        Vector3 offset = new Vector3(0, 1, 0);
-        Vector3 towerOffset = new Vector3(0, 0.5f, 0);
-
-        while (!hasBuilt)
-        {
-            Debug.DrawRay(transform.position + offset, Camera.main.transform.TransformDirection(Vector3.forward) * 5, Color.red);
-
-            if (Physics.Raycast(transform.position + offset, Camera.main.transform.TransformDirection(Vector3.forward), out hit, 5, ground))
-            {
-                tower.transform.position = hit.point + towerOffset;
-                tower.transform.rotation = transform.rotation;
-            }
-
-            if (Input.GetMouseButton(0))
-            {
-                Debug.Log("finished building");
-                Destroy(tower);
-
-                photonView.RPC("BuildTower", RpcTarget.AllBuffered, tower.transform.position);                
-                hasBuilt = true;
-            }
-
-            yield return new WaitForEndOfFrame();
-        }
-
-        //While(!hasTurned)
-        //allow option for fine rotatating of the newly built tower
-
-        building = false;
-    }
-
-    protected void Move()
+    protected override void Move()
     {
         switch (type)
         {
@@ -143,26 +73,33 @@ public class ServerPlayer : MonoBehaviourPun
                     moveDirection *= speed;
 
                     if (Input.GetButtonDown("Jump"))
-                        moveDirection.y = jumpSpeed;
-
-                    /*
-                    if(moveDirection.magnitude > 0.1)
                     {
-                        photonView.RPC("RPC_SetSpeed", RpcTarget.All, moveDirection.z);
+                        moveDirection.y = jumpSpeed;
+                        isGrounded = false;
+                        photonView.RPC("RPC_SetGrounded", RpcTarget.All, false);
                     }
-                    */
+
+                }
+                else
+                {
+                    float tempY = moveDirection.y;
+
+                    moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+
+                    moveDirection = transform.TransformDirection(moveDirection);
+
+                    moveDirection *= speed;
+
+                    moveDirection = new Vector3(moveDirection.x, tempY, moveDirection.z);
+
+                    moveDirection.y -= gravity * Time.deltaTime;
                 }
 
-                moveDirection.y -= gravity * Time.deltaTime;
 
                 controller.Move(moveDirection * Time.deltaTime);
 
-                photonView.RPC("RPC_SetSpeed", RpcTarget.All, moveDirection.x);
-                photonView.RPC("RPC_SetPosition", RpcTarget.All, transform.position);
+                photonView.RPC("RPC_SetSpeed", RpcTarget.All, moveDirection.x + moveDirection.z);
 
-                if (controller.isGrounded)
-                    isGrounded = true;
-                
                 break;
         }
 
@@ -176,7 +113,7 @@ public class ServerPlayer : MonoBehaviourPun
 
     }
 
-    protected void Target()
+    protected override void Target()
     {
         RaycastHit hit;
         Vector3 offset = new Vector3(0, 1, 0);
@@ -198,6 +135,46 @@ public class ServerPlayer : MonoBehaviourPun
 
                 Debug.DrawRay(transform.position + offset, Camera.main.transform.TransformDirection(Vector3.forward) * hit.distance, Color.blue);
             }
+
+            if (hit.transform.tag.Equals("Tower"))
+            {
+                TowerUIController uihandler = hit.transform.gameObject.GetComponent<TowerUIController>();
+                OTower tower = hit.transform.gameObject.GetComponent<OTower>();
+
+                if (Mathf.Abs((transform.position - hit.transform.position).magnitude) <= 10)
+                {
+                    uihandler.StopAllCoroutines();
+                    uihandler.StartCoroutine("ShowUI");
+
+                    //Keeps HealthBar Roughly the same size throughout
+                    float size = (transform.position - hit.transform.position).magnitude / 100;
+                    if (size < 0.08)
+                        size = 0.08f;
+
+                    uihandler.panel.transform.localScale = new Vector3(size, size, size);
+
+                    Debug.DrawRay(transform.position + offset, Camera.main.transform.TransformDirection(Vector3.forward) * hit.distance, Color.green);
+                }
+
+                if (tower.photonView.IsMine)
+                {
+                    if (Input.GetKeyDown("g"))
+                    {
+                        StartCoroutine(UpgradeBuilding(tower, uihandler));
+                    }
+
+                    else if (Input.GetKeyDown("e"))
+                    {
+                        StartCoroutine(RepairBuilding(tower));
+                    }
+
+                    else if (Input.GetKeyDown("v"))
+                    {
+                        StartCoroutine(SellBuilding(tower, uihandler));
+                    }
+                }
+
+            }
         }
         else
         {
@@ -205,11 +182,58 @@ public class ServerPlayer : MonoBehaviourPun
         }
     }
 
-    //Take damage based on damage that was dealt
-    public void TakeDamage(int damage)
+    IEnumerator Building(int towerNum)
     {
-        health -= damage;
+        OTower tower = towers[towerNum].GetComponent<OTower>();
+
+        //Break if we dont have enough money
+        if (money < tower.cost)
+        {
+            Debug.Log("Dont have enough mana to build tower");
+            //Play error sound
+        }
+        else
+        {
+            //We can only raycast to the ground
+            LayerMask ground = 1 << 9;
+
+            bool hasBuilt = false;
+            building = true;
+
+            //This would be a tempTower array, and will instantiate the real tower later
+            GameObject towerObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "BArricade"), new Vector3(100, 100, 100), transform.rotation);
+
+            RaycastHit hit;
+            Vector3 offset = new Vector3(0, 1, 0);
+            Vector3 towerOffset = new Vector3(0, 0.5f, 0);
+
+            while (!hasBuilt)
+            {
+                Debug.DrawRay(transform.position + offset, Camera.main.transform.TransformDirection(Vector3.forward) * 5, Color.red);
+
+                if (Physics.Raycast(transform.position + offset, Camera.main.transform.TransformDirection(Vector3.forward), out hit, 5, ground))
+                {
+                    towerObject.transform.position = hit.point + towerOffset;
+                    towerObject.transform.rotation = transform.rotation;
+                }
+
+                if (Input.GetMouseButton(0))
+                {
+                    print("finished building");
+                    money -= tower.cost;
+                    hasBuilt = true;
+                }
+
+                yield return new WaitForEndOfFrame();
+            }
+
+            //While(!hasTurned)
+            //allow option for fine rotatating of the newly built tower
+
+            building = false;
+        }
     }
+
 
     [PunRPC]
     void Attack(Vector3 position, Quaternion rotation)

@@ -2161,7 +2161,7 @@ GameObject:
   - component: {fileID: 765756531879923518}
   - component: {fileID: 765756531879923519}
   - component: {fileID: 765756532734600035}
-  - component: {fileID: 4805412544980365837}
+  - component: {fileID: -3403778685967190818}
   m_Layer: 12
   m_Name: BArricade
   m_TagString: Tower
@@ -2230,7 +2230,6 @@ MonoBehaviour:
   cost: 10
   level: 1
   damage: 0
-  bounds: {fileID: 4805412544980365837}
 --- !u!65 &765756532734600035
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2242,21 +2241,30 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2.3378808, y: 1, z: 1.6424916}
-  m_Center: {x: 0.54983735, y: 0, z: -0.26547933}
---- !u!65 &4805412544980365837
-BoxCollider:
+  m_Size: {x: 2.125074, y: 1, z: 1.1796896}
+  m_Center: {x: 0.56253695, y: 0, z: -0.08984494}
+--- !u!114 &-3403778685967190818
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2664277348719433536}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 3.1280637, y: 1, z: 2.2232635}
-  m_Center: {x: 0.55600566, y: 0, z: -0.2601677}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  observableSearch: 2
+  Synchronization: 3
+  OwnershipTransfer: 0
+  ObservedComponents: []
+  viewIdField: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &3163358837482931316
 GameObject:
   m_ObjectHideFlags: 0

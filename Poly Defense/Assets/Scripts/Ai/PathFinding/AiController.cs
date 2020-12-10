@@ -5,7 +5,7 @@ using UnityEngine;
 public class AiController : MonoBehaviour
 {
 
-    MonoGraph mGraph;
+    NavMesh mGraph;
 
     Kinematic body = new Kinematic();
     Arrive arrive = new Arrive();
@@ -20,7 +20,7 @@ public class AiController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        mGraph = FindObjectOfType<MonoGraph>();
+        mGraph = FindObjectOfType<NavMesh>();
 
         arrive.character = body;
         arrive.maxAcceleration = acceleration;
@@ -92,7 +92,7 @@ public class AiController : MonoBehaviour
             }
 
             //Update body and transform
-            body.Update(arrive.getSteering(), Time.deltaTime);
+            body.Update(arrive.GetSteering(), Time.deltaTime);
 
             transform.position = body.position;
             transform.rotation = Quaternion.Euler(transform.rotation.x, body.orientation * Mathf.Rad2Deg, transform.rotation.z);
@@ -114,7 +114,7 @@ public class AiController : MonoBehaviour
         //Get best node to start at
         Node<MonoNode> startNode = mGraph.FindBestNode(transform, endNode);
         
-        var camefrom = GraphSearch<MonoNode>.Dijkstra(graph, startNode, endNode);
+        var camefrom = GraphSearch.Dijkstra(graph, startNode, endNode);
 
         Node<MonoNode> currentNode = endNode;
 
@@ -125,7 +125,6 @@ public class AiController : MonoBehaviour
         while (currentNode != startNode)
         {
             waypointList.Add(currentNode.Value.transform);
-
             camefrom.TryGetValue(currentNode, out currentNode);
         }
 

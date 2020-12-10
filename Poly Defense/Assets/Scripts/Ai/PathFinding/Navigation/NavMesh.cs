@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MonoGraph : MonoBehaviour
+public class NavMesh : MonoBehaviour
 {
     public MonoNode[] nodes;
 
@@ -10,10 +10,6 @@ public class MonoGraph : MonoBehaviour
     public NodeList<MonoNode> nodeSet = new NodeList<MonoNode>();
 
     public Color neighbourColor;
-
-    public GameObject blocker;
-
-    public MonoNode p;
 
     void Awake()
     {
@@ -33,20 +29,24 @@ public class MonoGraph : MonoBehaviour
         //Set GraphNode Neighbours
         foreach(GraphNode<MonoNode> gNode in nodeSet)
         {
-            foreach(MonoNode mNode in gNode.Value.Neighbours)
+            foreach(GraphNode<MonoNode> mNode in gNode.Neighbours)
             {
-                GraphNode<MonoNode> neghbouringNode = (GraphNode<MonoNode>)nodeSet.FindByValue(mNode);
+                //Change this so not grabbing from value, GraphNode should have a toCost and fromCost
+                float cost = (mNode.Value.cost + gNode.Value.cost);
 
-                float cost = (mNode.cost + gNode.Value.cost);
-
-                graph.AddDirectedEdge(gNode, neghbouringNode, Mathf.RoundToInt(cost));
+                graph.AddDirectedEdge(gNode, mNode, Mathf.RoundToInt(cost));
             }
         }
     }
 
+    private void Start()
+    {
+        UpdateGraph();
+    }
+
     private void Update()
     {
-        foreach(Node<MonoNode> node in nodeSet)
+        foreach (Node<MonoNode> node in nodeSet)
         {
             if (node.Value.isEnabled)
             {
@@ -55,21 +55,6 @@ public class MonoGraph : MonoBehaviour
                     Debug.DrawLine(node.Value.transform.position, neighbourNode.Value.transform.position, neighbourColor);
                 }
             }
-        }
-
-
-        if (Input.GetKeyDown("f"))
-        {
-            p.Disable();
-            blocker.SetActive(true);
-            UpdateGraph();
-        }
-
-        if (Input.GetKeyDown("g"))
-        {
-            p.Enable();
-            blocker.SetActive(false);
-            UpdateGraph();
         }
     }
 
@@ -141,14 +126,9 @@ public class MonoGraph : MonoBehaviour
 
         Node<MonoNode> closestNode = FindClosestNode(transform);
         
-        foreach(Node<MonoNode> node in closestNode.Neighbors)
+        foreach(Node<MonoNode> node in closestNode.Neighbours)
         {
             seeableNodes.Add(node);
-        }
-
-        foreach (Node<MonoNode> node in seeableNodes)
-        {
-            print(node.Value);
         }
 
         int smallestCost = int.MaxValue;
@@ -159,7 +139,7 @@ public class MonoGraph : MonoBehaviour
         {
             if (seeableNode.Value.isEnabled)
             {
-                var camefrom = GraphSearch<MonoNode>.Dijkstra(graph, seeableNode, goal);
+                var camefrom = GraphSearch.ASearch(graph, seeableNode, goal);
                 Node<MonoNode> currentNode = goal;
 
                 int totalCost = 0;
@@ -182,4 +162,84 @@ public class MonoGraph : MonoBehaviour
         Debug.DrawLine(transform.position, bestNode.Value.transform.position, Color.green, 1f);
         return bestNode;
     }
+
+    public bool GetWaypoints(Transform start, Transform goal, out List<Transform> waypointList)
+    {
+        //List of waypoints - we return this
+        List<Transform> waypoints = new List<Transform>();
+
+        //Get To/From Nodes on Graph
+        Node<MonoNode> goalNode = FindClosestNode(goal);
+        Node<MonoNode> startNode = FindBestNode(start, goalNode);
+
+        //Get the Dictionary of Searched Nodes
+        var camefrom = GraphSearch.ASearch(graph, startNode, goalNode);
+
+        //Early exit
+        if (!camefrom.ContainsValue(startNode))
+        {
+            //We did not complete a path to the startNode
+            //Therefore we cannot navigate to this goal
+            waypointList = waypoints;
+            return false;
+        }
+
+        //Start from the end of the list
+        Node<MonoNode> currentNode = goalNode;       
+        waypoints.Add(goal);
+
+        //Add the rest going from finalDestination to startingPoint
+        while (currentNode != startNode)
+        {
+            waypoints.Add(currentNode.Value.transform);
+            camefrom.TryGetValue(currentNode, out currentNode);
+        }
+
+        //Add starting node -- 
+        waypoints.Add(startNode.Value.transform);
+
+        waypointList = waypoints;
+        return true;
+
+    }
+
+    public void DisableBounds(Bounds bounds)
+    {
+        foreach(Node<MonoNode> node in nodeSet)
+        {
+            if(bounds.Contains(node.Value.transform.position))
+            {
+                node.Value.Disable();
+            }
+        }
+
+        UpdateGraph();
+    }
+
+    public void EnableBounds(Bounds bounds)
+    {
+        foreach (Node<MonoNode> node in nodeSet)
+        {
+            if (bounds.Contains(node.Value.transform.position))
+            {
+                node.Value.Disable();
+            }
+        }
+
+        UpdateGraph();
+    }
+
+    public void DisableNode(Node<MonoNode> node)
+    {
+        node.Value.Disable();
+        UpdateGraph();
+    }
+
+    public void EnableNode(Node<MonoNode> node)
+    {
+        node.Value.Enable();
+        UpdateGraph();
+    }
+
+
 }

@@ -1736,6 +1736,9 @@ MonoBehaviour:
   healthBar: {fileID: 7190665252498034868}
   UI: {fileID: 7190665253583976703}
   healthText: {fileID: 7190665253095154942}
+  dropOnDeath: {fileID: 8489989380821977922, guid: c3a4d1d13ea2d85408e756e7a4da6f1a,
+    type: 3}
+  rb: {fileID: 7190665253952615062}
 --- !u!114 &7190665253805685654
 MonoBehaviour:
   m_ObjectHideFlags: 0

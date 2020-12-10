@@ -7,17 +7,27 @@ public class MonoNode : MonoBehaviour
     public List<MonoNode> Neighbours;
     public List<MonoNode> TrueNeighbours;
 
-    public Node<Transform> node;
-
+    public float nodeSpread;
     public int cost;
     public bool isEnabled = true;
 
-    private void Start()
+    private void Awake()
     {
-        foreach(MonoNode node in Neighbours)
+        foreach (MonoNode node in FindObjectsOfType<MonoNode>())
+        {
+            if ((node.transform.position - transform.position).magnitude <= nodeSpread)
+            {
+                if (!Neighbours.Contains(node) && node != this)
+                {
+                    Neighbours.Add(node);
+                }
+            }
+        }
+
+        foreach (MonoNode node in Neighbours)
         {
             TrueNeighbours.Add(node);
-        }
+        }    
     }
 
     public void Disable()

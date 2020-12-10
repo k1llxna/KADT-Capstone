@@ -17,7 +17,7 @@ public class Arrive
 
     float targetSpeed;
 
-    public SteeringOutput getSteering()
+    public SteeringOutput GetSteering()
     {
         SteeringOutput result = new SteeringOutput();
 

@@ -40,7 +40,7 @@ public class Graph<T>
 
     public void AddDirectedEdge(GraphNode<T> from, GraphNode<T> to, int cost)
     {
-        from.Neighbors.Add(to);
+        from.Neighbours.Add(to);
         from.Costs.Add(cost);
     }
 
@@ -48,7 +48,7 @@ public class Graph<T>
     {
         AddDirectedEdge(from, to, cost); //This was duplicated so just call the existing value
 
-        to.Neighbors.Add(to);
+        to.Neighbours.Add(to);
         to.Costs.Add(cost);
     }
 
@@ -56,7 +56,7 @@ public class Graph<T>
     {
         int neighbourCounter = 0;
 
-        foreach(GraphNode<T> neighbour in from.Neighbors)
+        foreach(GraphNode<T> neighbour in from.Neighbours)
         {
             if(neighbour == to)
             {
@@ -74,12 +74,12 @@ public class Graph<T>
 
     public NodeList<T> Neighbours(Node<T> node)
     {
-        return nodeSet[nodeSet.IndexOf(node)].Neighbors;
+        return nodeSet[nodeSet.IndexOf(node)].Neighbours;
     }
 
     public NodeList<T> Neighbours(T value)
     {
-        return nodeSet.FindByValue(value).Neighbors;
+        return nodeSet.FindByValue(value).Neighbours;
     }
 
     public GraphNode<T> GetGraphNode(Node<T> node)
@@ -111,10 +111,10 @@ public class Graph<T>
         // enumerate through each node in nodeSet, removing edges to this node
         foreach (GraphNode<T> gnode in nodeSet)
         {
-            int index = gnode.Neighbors.IndexOf(nodeToRemove);
+            int index = gnode.Neighbours.IndexOf(nodeToRemove);
             if (index != -1)
             {
-                gnode.Neighbors.RemoveAt(index);
+                gnode.Neighbours.RemoveAt(index);
                 gnode.Costs.RemoveAt(index);
             }
         }

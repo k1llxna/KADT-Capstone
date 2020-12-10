@@ -11,7 +11,7 @@ public class Mage : Character
 
 
 
-    public override void Attack()
+    protected override void Attack()
     {
         GameObject newB = Instantiate(bullet, transform.position + new Vector3(0, 1, 0), Camera.main.transform.rotation);
         Destroy(newB, 5f);

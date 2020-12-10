@@ -10,7 +10,9 @@ public class OTower : Structure
     public int level;
     public float damage;
 
-    int sellPrice;
+    protected int sellPrice;
+
+    public BoxCollider bounds;
 
     // Start is called before the first frame update
     void Start()
@@ -49,13 +51,19 @@ public class OTower : Structure
 
         damage += Mathf.RoundToInt(maxHealth * 0.12f);
         damage *= 2;
+
+        transform.localScale *= 1.2f;
+
+        Placed();
     }
 
     public void Sell(Character player)
     {
         //Player gets 65% back upon selling
         player.GiveMoney(Mathf.RoundToInt(cost * 0.65f));
-        Destroy(gameObject);
+
+        //Kill object
+        Die();
     }
 
     public void Repair()
@@ -69,6 +77,22 @@ public class OTower : Structure
                 health = maxHealth;
             }
         }
+    }
+
+    public void Placed()
+    {
+        NavMesh graph = FindObjectOfType<NavMesh>();
+
+        graph.DisableBounds(bounds.bounds);
+    }
+
+    public override void Die()
+    {
+        NavMesh graph = FindObjectOfType<NavMesh>();
+
+        graph.EnableBounds(bounds.bounds);
+
+        base.Die();
     }
 
 }

@@ -77,9 +77,13 @@ MonoBehaviour:
   maxHealth: 10
   damage: 2
   speed: 2
+  acceleration: 5
+  waypointList: []
   healthBar: {fileID: 1949634879}
   UI: {fileID: 927676788}
   healthText: {fileID: 1353573749}
+  dropOnDeath: {fileID: 0}
+  rb: {fileID: 0}
 --- !u!114 &704789021
 MonoBehaviour:
   m_ObjectHideFlags: 0

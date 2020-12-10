@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿/*using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -121,12 +121,12 @@ public class blah : MonoBehaviour
     IEnumerator Pathfind()
     {
 
-        foreach(Node<Transform> t in nodeSet[105].Neighbors)
+        foreach(Node<Transform> t in nodeSet[105].Neighbours)
         {
             print(t.Value);
         }
 
-        Dictionary<Node<Transform>, Node<Transform>> cameFrom = GraphSearch<Transform>.BFS(graph, startNode, finishNode);
+        //Dictionary<Node<Transform>, Node<Transform>> cameFrom = GraphSearch.BFS(graph, startNode, finishNode);
 
 
         Node<Transform> nextNode;
@@ -168,3 +168,4 @@ public class blah : MonoBehaviour
     }
 
 }
+*/

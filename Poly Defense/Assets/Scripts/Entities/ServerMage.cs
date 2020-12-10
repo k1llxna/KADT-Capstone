@@ -8,26 +8,6 @@ public class ServerMage : ServerPlayer
     public GameObject bullet;
 
     // Update is called once per frame
-    void Update()
-    {
-        if (photonView.IsMine)
-        {
-            Move();
-
-            if (!building)
-            {
-                if (Input.GetKeyDown("k"))
-                    StartCoroutine("Building");
-
-                if (Input.GetMouseButtonDown(0))
-                    photonView.RPC("Attack", RpcTarget.All, transform.position, Camera.main.transform.rotation);
-
-                //Get information of targeted object with raycast
-                Target();
-            }
-        }
-
-    }
 
     [PunRPC]
     void Attack(Vector3 position, Quaternion rotation)

@@ -6,34 +6,34 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class Character : MonoBehaviourPun
 {
-    CharacterController controller;
-    Animator animator;
+    protected CharacterController controller;
+    protected Animator animator;
     public float speed;
     public float jumpSpeed;
     public float rotationSpeed; // Used when not using MouseLook.CS to rotate character
     public float gravity;
-    bool isGrounded;
+    public bool isGrounded;
 
     public float health;
     public int maxMana;
-    int mana = 0;
+    protected int mana = 0;
 
-    Vector3 moveDirection = Vector3.zero;
+    protected Vector3 moveDirection = Vector3.zero;
 
     public GameObject[] towers;
     public Ability[] abilities;
     protected bool building;
 
-    enum ControllerType {  SimpleMove, Move };
-    [SerializeField] ControllerType type;
+    protected enum ControllerType {  SimpleMove, Move };
+    [SerializeField] protected ControllerType type;
 
-    int maxMoney = 100;
+    protected int maxMoney = 100;
     public int money;
 
-    float manaRefreshRate = 0;
-    int manaRefreshCooldown = 3; //How long till recharge
-    float manaRefreshTime = 0; //Time till cooldown is over
-    int manaGain = 1; //How much per Tick
+    protected float manaRefreshRate = 0;
+    protected int manaRefreshCooldown = 3; //How long till recharge
+    protected float manaRefreshTime = 0; //Time till cooldown is over
+    protected int manaGain = 1; //How much per Tick
 
     // Start is called before the first frame update
     void Start()
@@ -156,7 +156,7 @@ public class Character : MonoBehaviourPun
                 {
                     print("finished building");
                     money -= tower.cost;
-                    hasBuilt = true;
+                    hasBuilt = true;                    
                 }
 
                 yield return new WaitForEndOfFrame();
@@ -165,11 +165,12 @@ public class Character : MonoBehaviourPun
             //While(!hasTurned)
             //allow option for fine rotatating of the newly built tower
 
+            towerObject.GetComponent<OTower>().Placed();
             building = false;
         }
     }
 
-    protected void Move()
+    protected virtual void Move()
     {
         switch (type)
         {
@@ -227,9 +228,9 @@ public class Character : MonoBehaviourPun
 
     }
 
-    public virtual void Attack(){ }
+    protected virtual void Attack(){ }
 
-    public void UpdateMana()
+    protected void UpdateMana()
     {
         //If we are within the cooldown time increase mana
         if(manaRefreshTime >= manaRefreshCooldown)
@@ -253,7 +254,7 @@ public class Character : MonoBehaviourPun
         }
     }
 
-    protected void Target()
+    protected virtual void Target()
     {
         RaycastHit hit;
         Vector3 offset = new Vector3(0, 1, 0);
@@ -319,10 +320,10 @@ public class Character : MonoBehaviourPun
         }
     }
 
-    IEnumerator UpgradeBuilding(OTower tower, TowerUIController UIController)
+    protected IEnumerator UpgradeBuilding(OTower tower, TowerUIController UIController)
     {
         float timeElapsed = 0;
-        float timeToUpgrade = tower.level * 6;
+        float timeToUpgrade = tower.level * 2;
 
         UIController.upgradeBar.maxValue = timeToUpgrade;
         UIController.upgradeBar.gameObject.SetActive(true);
@@ -348,7 +349,7 @@ public class Character : MonoBehaviourPun
         UIController.upgradeBar.gameObject.SetActive(false);
     }
 
-    IEnumerator SellBuilding(OTower tower, TowerUIController UIController)
+    protected IEnumerator SellBuilding(OTower tower, TowerUIController UIController)
     {
         float timeElapsed = 0;
         float timeToUpgrade = 2;
@@ -377,7 +378,7 @@ public class Character : MonoBehaviourPun
         UIController.sellBar.gameObject.SetActive(false);
     }
 
-    IEnumerator RepairBuilding(OTower tower)
+    protected IEnumerator RepairBuilding(OTower tower)
     {
         while (Input.GetKey("e"))
         {

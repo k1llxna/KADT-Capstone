@@ -5,17 +5,17 @@ using UnityEngine;
 public class Node<T>
 {
     private T data;
-    private NodeList<T> neighbors = null;
+    private NodeList<T> neighbours = null;
 
     public Node() { }
     public Node(T data) : this(data, null) { }
-    public Node(T data, NodeList<T> neighbors)
+    public Node(T data, NodeList<T> neighbours)
     {
         this.data = data;
-        this.neighbors = neighbors;
+        this.neighbours = neighbours;
     }
 
     public T Value { get; set; }
 
-    public NodeList<T> Neighbors { get; set; } //Actual Neighbours
+    public NodeList<T> Neighbours { get; set; } //Actual Neighbours
 }

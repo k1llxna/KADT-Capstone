@@ -20,6 +20,6 @@ public class ObstacleAvoidance : Arrive
         if (collision != null)
             target.position = collision.position + collision.normal * avoidDistance;
 
-        return base.getSteering();
+        return base.GetSteering();
     }
 }

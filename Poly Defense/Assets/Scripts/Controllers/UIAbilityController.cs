@@ -7,6 +7,8 @@ public class UIAbilityController : MonoBehaviour
 {
     public Character player;
 
+    public Canvas canvas;
+
     public TextMeshProUGUI[] towerCostTexts;
     public TextMeshProUGUI[] abilityCostTexts;
 
@@ -17,8 +19,11 @@ public class UIAbilityController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        canvas.worldCamera = Camera.main;
+
         //Clip amount of costs to the amount of towers we have
         towerCosts = new int[towerCostTexts.Length];
+        abilityCosts = new int[abilityCostTexts.Length];
 
         //Set corresponding costs
         int i = 0;

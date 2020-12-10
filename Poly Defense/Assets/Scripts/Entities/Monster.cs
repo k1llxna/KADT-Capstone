@@ -9,45 +9,70 @@ using TMPro;
 
 public class Monster : MonoBehaviour
 {
+    //Attributes
     public float maxHealth;
     float health;
-
+    
     public int damage;
     public float speed;
+    public float acceleration;
 
     Animator animator;
 
-    Static body = new Static();
+    //Kinematic and method of movement
+    Kinematic body = new Kinematic();
+    Arrive arrive = new Arrive();
 
-    KinematicArrive seek = new KinematicArrive();
+    NavMesh NavMesh;
 
-    GameObject target;
+    //Pathfinding Helpers
+    Transform target;
+    Transform currentTarget;
+    List<Transform> waypointList = new List<Transform>();
+    int currentWaypoint = 0;
 
+    //Should be in another script on the Canvas
     public Slider healthBar;
     public Canvas UI;
     public TextMeshProUGUI healthText;
 
+    //Items
     public GameObject dropOnDeath;
+
     public Rigidbody rb;
+
+    //This allows use of RagDoll or other physics on the body without being constrained to the Kinematic, In the future kinematic should have it's own rigidbody features
+    bool stable = true;
+    bool attacking = false;
 
     // Start is called before the first frame update
     void Start()
     {
+        NavMesh = FindObjectOfType<NavMesh>();
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
 
-        body.position = transform.position;
+        //Make sure enemy is full health
         health = maxHealth;
 
-        //target = FindObjectOfType<Structure>().gameObject;
+        //Setup Kinematics
+        body = new Kinematic();
+        arrive = new Arrive();
+
+        body.rotSpeed = 10;
+        body.position = transform.position;        
+
+        arrive.character = body;
+        arrive.maxAcceleration = acceleration;
+        arrive.maxSpeed = speed;
+        arrive.targetRadius = 1;
+        arrive.slowRadius = 1;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-        GetCloserTarget();
-
+        //Prevent doing nothing/errors
         if(!target)
         {
             FindTarget();
@@ -57,10 +82,6 @@ public class Monster : MonoBehaviour
         {
             Move();
         }
-
-        UpdateHealthBar();
-
-        body.position = transform.position;
     }
 
     protected virtual void Attack()
@@ -77,24 +98,26 @@ public class Monster : MonoBehaviour
 
     void Move()
     {
-        if ((transform.position - target.transform.position).magnitude <= 1)
+        if ((transform.position - target.position).magnitude <= 1)
         {
+            //This can be an Ienumurator and we can call a bool that stops movement
             Attack();
             animator.SetBool("Running", false);
             animator.SetTrigger("Attack");
         }
-        else
+        else if ((transform.position - currentTarget.position).magnitude <= 1f)
         {
-            //BLAH BLAH DO PATHFINDING TO TARGET HERE;
-            seek.target = target.transform.position;
-            seek.maxSpeed = speed;
-            seek.character = body;
-
-            body.UpdateObject(seek.getSteering(), Time.deltaTime);
-            transform.position = body.position;
-
-            animator.SetBool("Running", true);
+            currentWaypoint--;
+            currentTarget = waypointList[currentWaypoint];
+            arrive.target = currentTarget;
         }
+
+        body.Update(arrive.GetSteering(), Time.deltaTime);
+        transform.position = body.position;
+
+        transform.rotation = Quaternion.Euler(transform.rotation.x, body.orientation * Mathf.Rad2Deg, transform.rotation.z);
+
+        animator.SetBool("Running", true);
     }
 
     void FindTarget()
@@ -102,57 +125,44 @@ public class Monster : MonoBehaviour
         //Structure should include Player's Base
         Structure[] towers = FindObjectsOfType<Structure>();
         Character[] characters = FindObjectsOfType<Character>();
+        GameObject Base = GameObject.FindGameObjectWithTag("Base");
 
-        if (towers.Length > 0)
+        //If we can get to the goal position
+        if(NavMesh.GetWaypoints(transform, Base.transform, out waypointList))
         {
-
-            Structure closestStruct = towers[0];
-            float distance = 9999999;
-
-            foreach (Structure t in towers)
-            {
-                UnityEngine.Vector3 dis = t.gameObject.transform.position - transform.position;
-
-                if (dis.magnitude < distance)
-                {
-                    closestStruct = t;
-                    distance = dis.magnitude;
-                }
-            }
-
-            target = closestStruct.gameObject;
+            currentWaypoint = waypointList.Count - 1;
+            currentTarget = waypointList[currentWaypoint];
+            arrive.target = currentTarget;
+            target = Base.transform;
         }
-    }
-    void GetCloserTarget()
-    {
-        //Get all structures
-        Structure[] towers = FindObjectsOfType<Structure>();
-            
-
-        if (towers.Length > 0)
+        else
         {
-            if (!target)
-                target = towers[0].gameObject;
-
-            //Check for closest structure
-            foreach (Structure t in towers)
+            //If not find closest possible tower blocking the path
+            foreach(Structure tower in towers)
             {
-                UnityEngine.Vector3 dis = t.gameObject.transform.position - transform.position;
-                UnityEngine.Vector3 targetDis = target.transform.position - transform.position;
+                //Maybe add logic so we go to the closest one on the way to base
+                //Right now it could possibly back track if there was a tower off to the side or behind that was closer
 
-                if (dis.magnitude < targetDis.magnitude)
+                //If we can navigate to this tower - do so
+                if(NavMesh.GetWaypoints(transform, tower.transform, out waypointList))
                 {
-                    target = t.gameObject;
+                    currentWaypoint = waypointList.Count - 1;
+                    currentTarget = waypointList[currentWaypoint];
+                    arrive.target = currentTarget;
+                    target = tower.transform;
+                    break;
                 }
+
             }
         }
     }
-
     public void TakeDamage(float damage)
     {
         health -= damage;
 
-        if(health <= 0)
+        UpdateHealthBar();
+
+        if (health <= 0)
         {
             Die();
         }
@@ -193,8 +203,11 @@ public class Monster : MonoBehaviour
     }
     public void Explode(Vector3 position, int damage)
     {
+        stable = false;
         rb.AddExplosionForce(20, position, 100, 2, ForceMode.Impulse);
         TakeDamage(damage);
+
+        //StartCoroutine(Stabelize());
     }
 
     private void OnTriggerEnter(Collider other)
@@ -202,7 +215,7 @@ public class Monster : MonoBehaviour
         //If we are near the player we want to target them
         if(other.tag.Equals("Player"))
         {
-            target = other.gameObject;
+            target = other.gameObject.transform;
         }
     }
 
@@ -211,8 +224,16 @@ public class Monster : MonoBehaviour
         //Upon a player leaving the attack range, we want to reset the target
         if (other.tag.Equals("Player"))
         {
-            target = null;
+            FindTarget();
         }
     }
 
+    IEnumerator Stabelize()
+    {
+        
+
+        yield return new WaitForSeconds(1f);
+
+
+    }
 }
