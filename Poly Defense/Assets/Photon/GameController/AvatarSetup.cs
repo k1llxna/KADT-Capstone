@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class AvatarSetup : MonoBehaviour
 {
-    /*
     PhotonView PV;
     public int characterValue;
     public GameObject myCharacter;
@@ -33,7 +32,6 @@ public class AvatarSetup : MonoBehaviour
      
         //This can have local player info and replace the info of the charatcer
     }
-    */
 
 
 }
