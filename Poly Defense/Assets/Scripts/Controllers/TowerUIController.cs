@@ -21,10 +21,6 @@ public class TowerUIController : MonoBehaviour
     public TextMeshProUGUI repairCost;
     public TextMeshProUGUI sellCost;
 
-    private void Start()
-    {
-        UpdateStuff();
-    }
     // Update is called once per frame
     void Update()
     {

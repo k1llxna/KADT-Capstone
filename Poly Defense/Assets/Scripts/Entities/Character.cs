@@ -40,7 +40,7 @@ public class Character : MonoBehaviourPun
     {
         //Always start with mana regen
         manaRefreshTime = 3;
-        mana = 100;
+        mana = 20;
 
         controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();

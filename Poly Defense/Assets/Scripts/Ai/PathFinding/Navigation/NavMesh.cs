@@ -16,7 +16,7 @@ public class NavMesh : MonoBehaviour
         nodes = FindObjectsOfType<MonoNode>();
 
         //Populate NodeSet
-        foreach(MonoNode node in nodes)
+        foreach (MonoNode node in nodes)
         {
             GraphNode<MonoNode> newNode = new GraphNode<MonoNode>(node);
             newNode.Value = node;
@@ -27,9 +27,9 @@ public class NavMesh : MonoBehaviour
         graph = new Graph<MonoNode>(nodeSet);
 
         //Set GraphNode Neighbours
-        foreach(GraphNode<MonoNode> gNode in nodeSet)
+        foreach (GraphNode<MonoNode> gNode in nodeSet)
         {
-            foreach(GraphNode<MonoNode> mNode in gNode.Neighbours)
+            foreach (GraphNode<MonoNode> mNode in gNode.Neighbours)
             {
                 //Change this so not grabbing from value, GraphNode should have a toCost and fromCost
                 float cost = (mNode.Value.cost + gNode.Value.cost);
@@ -64,7 +64,7 @@ public class NavMesh : MonoBehaviour
         graph.Reset();
 
         graph = new Graph<MonoNode>();
-        
+
         //Create Graph
         graph = new Graph<MonoNode>(nodeSet);
 
@@ -93,7 +93,7 @@ public class NavMesh : MonoBehaviour
                 }
             }
         }
-        
+
     }
 
     //Return the absolute closest node
@@ -102,7 +102,7 @@ public class NavMesh : MonoBehaviour
         float distance = float.MaxValue;
         Node<MonoNode> closestNode = nodeSet[0];
 
-        foreach(Node<MonoNode> node in nodeSet)
+        foreach (Node<MonoNode> node in nodeSet)
         {
             if (node.Value.isEnabled)
             {
@@ -125,8 +125,8 @@ public class NavMesh : MonoBehaviour
         List<Node<MonoNode>> seeableNodes = new List<Node<MonoNode>>();
 
         Node<MonoNode> closestNode = FindClosestNode(transform);
-        
-        foreach(Node<MonoNode> node in closestNode.Neighbours)
+
+        foreach (Node<MonoNode> node in closestNode.Neighbours)
         {
             seeableNodes.Add(node);
         }
@@ -143,15 +143,15 @@ public class NavMesh : MonoBehaviour
                 Node<MonoNode> currentNode = goal;
 
                 //If we cant get to the this node
-                if(!camefrom.ContainsKey(goal))                
+                if (!camefrom.ContainsKey(goal))
                     break;
-                
+
 
                 float totalCost = 0;
 
                 while (currentNode != seeableNode)
                 {
-                    if(!currentNode.Value.isEnabled)
+                    if (!currentNode.Value.isEnabled)
                     {
                         totalCost = float.MaxValue;
                         break;
@@ -196,7 +196,7 @@ public class NavMesh : MonoBehaviour
         }
 
         //Start from the end of the list
-        Node<MonoNode> currentNode = goalNode;       
+        Node<MonoNode> currentNode = goalNode;
         waypoints.Add(goal);
 
         //Add the rest going from finalDestination to startingPoint
@@ -216,9 +216,9 @@ public class NavMesh : MonoBehaviour
 
     public void DisableBounds(Bounds bounds)
     {
-        foreach(Node<MonoNode> node in nodeSet)
+        foreach (Node<MonoNode> node in nodeSet)
         {
-            if(bounds.Contains(node.Value.transform.position))
+            if (bounds.Contains(node.Value.transform.position))
             {
                 node.Value.Disable();
             }

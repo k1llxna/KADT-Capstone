@@ -12,7 +12,7 @@ public class Monster : MonoBehaviour
     //Attributes
     public float maxHealth;
     float health;
-    
+
     public int damage;
     public float speed;
     public float acceleration;
@@ -64,7 +64,7 @@ public class Monster : MonoBehaviour
         arrive = new Arrive();
 
         body.rotSpeed = 10;
-        body.position = transform.position;        
+        body.position = transform.position;
 
         arrive.character = body;
         arrive.maxAcceleration = acceleration;
@@ -79,7 +79,7 @@ public class Monster : MonoBehaviour
     void Update()
     {
         //Prevent doing nothing/errors
-        if(!target)
+        if (!target)
         {
             FindTarget();
         }
@@ -94,7 +94,7 @@ public class Monster : MonoBehaviour
 
     protected virtual void Attack()
     {
-        if(target.tag.Equals("Player"))
+        if (target.tag.Equals("Player"))
         {
             target.GetComponent<Character>().TakeDamage(damage);
         }
@@ -136,7 +136,7 @@ public class Monster : MonoBehaviour
 
     void ShowMovement()
     {
-        for(int i = 0; i < waypointList.Count - 1; i++)
+        for (int i = 0; i < waypointList.Count - 1; i++)
         {
             Debug.DrawLine(waypointList[i].position, waypointList[i + 1].position, Color.white);
         }
@@ -151,12 +151,12 @@ public class Monster : MonoBehaviour
             StopAllCoroutines();
             StartCoroutine(StartAttacking());
             attacking = true;
-        }   
+        }
         //At current target  - change waypoint
         else if ((transform.position - currentTarget.position).magnitude <= 1f)
         {
             //We are right behind the target, we cant pathfind as this is the last node
-            if(currentWaypoint == 1)
+            if (currentWaypoint == 1)
             {
                 currentWaypoint--;
                 currentTarget = waypointList[currentWaypoint];
@@ -184,7 +184,7 @@ public class Monster : MonoBehaviour
         GameObject Base = GameObject.FindGameObjectWithTag("Base");
 
         //If we can get to the goal position
-        if(NavMesh.GetWaypoints(transform, Base.transform, out waypointList))
+        if (NavMesh.GetWaypoints(transform, Base.transform, out waypointList))
         {
             currentWaypoint = waypointList.Count - 1;
             currentTarget = waypointList[currentWaypoint];
@@ -195,13 +195,13 @@ public class Monster : MonoBehaviour
         else
         {
             //If not find closest possible tower blocking the path
-            foreach(Structure tower in towers)
+            foreach (Structure tower in towers)
             {
                 //Maybe add logic so we go to the closest one on the way to base
                 //Right now it could possibly back track if there was a tower off to the side or behind that was closer
 
                 //If we can navigate to this tower - do so
-                if(NavMesh.GetWaypoints(transform, tower.transform, out waypointList))
+                if (NavMesh.GetWaypoints(transform, tower.transform, out waypointList))
                 {
                     currentWaypoint = waypointList.Count - 1;
                     currentTarget = waypointList[currentWaypoint];
@@ -250,13 +250,13 @@ public class Monster : MonoBehaviour
     }
 
 
-    void Die(Vector3 from)    
-    {        
+    void Die(Vector3 from)
+    {
         //Make sure we have an item to drop
         if (dropOnDeath)
         {
             int drops = Random.Range(4, 20);
-            
+
             drops = Mathf.RoundToInt(drops / 5);
 
             Debug.Log("Im dying and spawning: " + drops + " drops");
@@ -272,7 +272,7 @@ public class Monster : MonoBehaviour
         {
             Debug.Log("No Drops Enabled");
         }
-        
+
         Explode(from);
 
         //Kill
@@ -282,9 +282,9 @@ public class Monster : MonoBehaviour
     {
         stable = false;
         isGrounded = false;
-        
+
         //Turn to ragdoll physics
-        
+
         animator.SetBool("Running", false);
         animator.SetBool("Attacking", false);
         attacking = false;
@@ -311,7 +311,7 @@ public class Monster : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         //If we are near the player we want to target them
-        if(other.tag.Equals("Player"))
+        if (other.tag.Equals("Player"))
         {
             //Update pathfinding to player
             target = other.gameObject.transform;
@@ -353,7 +353,7 @@ public class Monster : MonoBehaviour
 
         yield return new WaitForSeconds(3f);
 
-        ragdoll.TurnOff();        
+        ragdoll.TurnOff();
 
         animator.enabled = true;
         stable = true;

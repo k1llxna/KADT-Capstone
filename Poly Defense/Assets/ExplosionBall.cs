@@ -19,7 +19,7 @@ public class ExplosionBall : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
-    private void OnCollisionEnter(UnityEngine.Collision collision)
+    private void OnCollisionEnter(Collision collision)
     {
         //Explode
         animator.SetTrigger("Explode");
