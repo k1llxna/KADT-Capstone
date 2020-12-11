@@ -74,6 +74,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8873071886dcd8c408c9f02f756276de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+<<<<<<< HEAD
   maxHealth: 100
   damage: 10
   speed: 1
@@ -85,6 +86,14 @@ MonoBehaviour:
   dropOnDeath: {fileID: 8489989380821977922, guid: c3a4d1d13ea2d85408e756e7a4da6f1a,
     type: 3}
   rb: {fileID: 490746653}
+=======
+  maxHealth: 10
+  damage: 2
+  speed: 2
+  healthBar: {fileID: 1949634879}
+  UI: {fileID: 927676788}
+  healthText: {fileID: 1353573749}
+>>>>>>> 57fb6d3c32110bb5a679a14fbd055c45f38a51e6
 --- !u!114 &704789021
 MonoBehaviour:
   m_ObjectHideFlags: 0
