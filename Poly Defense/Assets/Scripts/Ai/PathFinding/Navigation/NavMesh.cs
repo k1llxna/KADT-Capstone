@@ -131,7 +131,7 @@ public class NavMesh : MonoBehaviour
             seeableNodes.Add(node);
         }
 
-        int smallestCost = int.MaxValue;
+        float smallestCost = float.MaxValue;
         Node<MonoNode> bestNode = seeableNodes[0];
 
         //Now we had a list of seeable Nodes -- time to find the best node out of all of them
@@ -142,11 +142,22 @@ public class NavMesh : MonoBehaviour
                 var camefrom = GraphSearch.ASearch(graph, seeableNode, goal);
                 Node<MonoNode> currentNode = goal;
 
-                int totalCost = 0;
+                //If we cant get to the this node
+                if(!camefrom.ContainsKey(goal))                
+                    break;
+                
+
+                float totalCost = 0;
 
                 while (currentNode != seeableNode)
                 {
-                    totalCost += currentNode.Value.cost;
+                    if(!currentNode.Value.isEnabled)
+                    {
+                        totalCost = float.MaxValue;
+                        break;
+                    }
+
+                    totalCost += (currentNode.Value.cost + Heuristic(currentNode.Value.transform, seeableNode.Value.transform));
 
                     camefrom.TryGetValue(currentNode, out currentNode);
                 }
@@ -176,7 +187,7 @@ public class NavMesh : MonoBehaviour
         var camefrom = GraphSearch.ASearch(graph, startNode, goalNode);
 
         //Early exit
-        if (!camefrom.ContainsValue(startNode))
+        if (!camefrom.ContainsKey(goalNode))
         {
             //We did not complete a path to the startNode
             //Therefore we cannot navigate to this goal
@@ -222,7 +233,7 @@ public class NavMesh : MonoBehaviour
         {
             if (bounds.Contains(node.Value.transform.position))
             {
-                node.Value.Disable();
+                node.Value.Enable();
             }
         }
 
@@ -241,5 +252,8 @@ public class NavMesh : MonoBehaviour
         UpdateGraph();
     }
 
-
+    float Heuristic(Transform start, Transform finish)
+    {
+        return (start.position - finish.position).magnitude;
+    }
 }

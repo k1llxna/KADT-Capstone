@@ -40,7 +40,7 @@ public class Character : MonoBehaviourPun
     {
         //Always start with mana regen
         manaRefreshTime = 3;
-        mana = 20;
+        mana = 100;
 
         controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
@@ -136,7 +136,7 @@ public class Character : MonoBehaviourPun
             building = true;
 
             //This would be a tempTower array, and will instantiate the real tower later
-            GameObject towerObject = Instantiate(towers[0], new Vector3(100, 100, 100), transform.rotation);
+            GameObject towerObject = Instantiate(towers[towerNum], new Vector3(100, 100, 100), transform.rotation);
 
             RaycastHit hit;
             Vector3 offset = new Vector3(0, 1, 0);

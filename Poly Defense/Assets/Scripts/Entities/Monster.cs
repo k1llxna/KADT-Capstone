@@ -26,7 +26,7 @@ public class Monster : MonoBehaviour
     NavMesh NavMesh;
 
     //Pathfinding Helpers
-    Transform target;
+    public Transform target;
     Transform currentTarget;
     List<Transform> waypointList = new List<Transform>();
     int currentWaypoint = 0;
@@ -40,10 +40,12 @@ public class Monster : MonoBehaviour
     public GameObject dropOnDeath;
 
     public Rigidbody rb;
+    public RagDollEffects ragdoll;
 
     //This allows use of RagDoll or other physics on the body without being constrained to the Kinematic, In the future kinematic should have it's own rigidbody features
     bool stable = true;
     bool attacking = false;
+    public bool isGrounded = true;
 
     // Start is called before the first frame update
     void Start()
@@ -51,6 +53,8 @@ public class Monster : MonoBehaviour
         NavMesh = FindObjectOfType<NavMesh>();
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
+
+        Physics.IgnoreLayerCollision(10, 10, true);
 
         //Make sure enemy is full health
         health = maxHealth;
@@ -67,6 +71,8 @@ public class Monster : MonoBehaviour
         arrive.maxSpeed = speed;
         arrive.targetRadius = 1;
         arrive.slowRadius = 1;
+
+        UpdateHealthBar();
     }
 
     // Update is called once per frame
@@ -78,10 +84,12 @@ public class Monster : MonoBehaviour
             FindTarget();
         }
 
-        if (target)
+        if (target && !attacking && stable)
         {
             Move();
         }
+
+        ShowMovement();
     }
 
     protected virtual void Attack()
@@ -96,20 +104,69 @@ public class Monster : MonoBehaviour
         }
     }
 
+    IEnumerator StartAttacking()
+    {
+        animator.SetBool("Running", false);
+        animator.SetBool("Attacking", true);
+
+        while (target)
+        {
+            //Make sure we are still in range of the target
+            //Upon killing the target, target will be instantly replaced, so dont keep attacking when change targets aswell - unless theyre right beside somehow
+            if ((transform.position - target.position).magnitude <= 1.5f)
+            {
+                Attack();
+
+                yield return new WaitForSeconds(0.5f);
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        attacking = false;
+        target = null;
+
+        animator.SetBool("Running", true);
+        animator.SetBool("Attacking", false);
+
+        //UpdatePathfinding();
+    }
+
+    void ShowMovement()
+    {
+        for(int i = 0; i < waypointList.Count - 1; i++)
+        {
+            Debug.DrawLine(waypointList[i].position, waypointList[i + 1].position, Color.white);
+        }
+    }
+
     void Move()
     {
-        if ((transform.position - target.position).magnitude <= 1)
+        //If we are at the target
+        if ((transform.position - target.position).magnitude <= 1.5f)
         {
             //This can be an Ienumurator and we can call a bool that stops movement
-            Attack();
-            animator.SetBool("Running", false);
-            animator.SetTrigger("Attack");
-        }
+            StopAllCoroutines();
+            StartCoroutine(StartAttacking());
+            attacking = true;
+        }   
+        //At current target  - change waypoint
         else if ((transform.position - currentTarget.position).magnitude <= 1f)
         {
-            currentWaypoint--;
-            currentTarget = waypointList[currentWaypoint];
-            arrive.target = currentTarget;
+            //We are right behind the target, we cant pathfind as this is the last node
+            if(currentWaypoint == 1)
+            {
+                currentWaypoint--;
+                currentTarget = waypointList[currentWaypoint];
+                arrive.target = currentTarget;
+            }
+            else if (!UpdatePathfinding() && currentWaypoint != 0) //Dont pathfind if we are at our destination
+            {
+                Debug.Log("Cant update Pathfinding");
+                FindTarget();
+            }
         }
 
         body.Update(arrive.GetSteering(), Time.deltaTime);
@@ -124,7 +181,6 @@ public class Monster : MonoBehaviour
     {
         //Structure should include Player's Base
         Structure[] towers = FindObjectsOfType<Structure>();
-        Character[] characters = FindObjectsOfType<Character>();
         GameObject Base = GameObject.FindGameObjectWithTag("Base");
 
         //If we can get to the goal position
@@ -134,6 +190,7 @@ public class Monster : MonoBehaviour
             currentTarget = waypointList[currentWaypoint];
             arrive.target = currentTarget;
             target = Base.transform;
+            Debug.Log("Attacking the base");
         }
         else
         {
@@ -150,13 +207,31 @@ public class Monster : MonoBehaviour
                     currentTarget = waypointList[currentWaypoint];
                     arrive.target = currentTarget;
                     target = tower.transform;
+                    Debug.Log("Attacking the closest Tower");
                     break;
                 }
 
             }
         }
     }
-    public void TakeDamage(float damage)
+
+    bool UpdatePathfinding()
+    {
+
+        //If we can get to the goal position
+        if (NavMesh.GetWaypoints(transform, target.transform, out waypointList))
+        {
+            currentWaypoint = waypointList.Count - 1;
+            currentTarget = waypointList[currentWaypoint];
+            arrive.target = currentTarget;
+            target = target.transform;
+            return true;
+        }
+
+        return false;
+    }
+
+    public void TakeDamage(float damage, Vector3 from)
     {
         health -= damage;
 
@@ -164,19 +239,19 @@ public class Monster : MonoBehaviour
 
         if (health <= 0)
         {
-            Die();
+            Die(from);
         }
     }
 
     void UpdateHealthBar()
     {
         healthBar.value = health / maxHealth;
-        healthText.SetText(health.ToString());
+        healthText.SetText(Mathf.RoundToInt(health).ToString());
     }
 
 
-    void Die()
-    {
+    void Die(Vector3 from)    
+    {        
         //Make sure we have an item to drop
         if (dropOnDeath)
         {
@@ -197,17 +272,40 @@ public class Monster : MonoBehaviour
         {
             Debug.Log("No Drops Enabled");
         }
+        
+        Explode(from);
 
         //Kill
-        Destroy(gameObject, 2f);
+        Destroy(gameObject, 5f);
     }
-    public void Explode(Vector3 position, int damage)
+    public void Explode(Vector3 position)
     {
         stable = false;
-        rb.AddExplosionForce(20, position, 100, 2, ForceMode.Impulse);
-        TakeDamage(damage);
+        isGrounded = false;
+        
+        //Turn to ragdoll physics
+        
+        animator.SetBool("Running", false);
+        animator.SetBool("Attacking", false);
+        attacking = false;
 
-        //StartCoroutine(Stabelize());
+        animator.enabled = false;
+
+        ragdoll.TurnOn();
+
+        rb.useGravity = true;
+        rb.AddExplosionForce(100, position, 100, 2, ForceMode.Impulse);
+
+
+        if (health > 0)
+        {
+            StartCoroutine(Stabelize());
+        }
+    }
+
+    public bool IsAlive()
+    {
+        return health > 0;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -215,7 +313,12 @@ public class Monster : MonoBehaviour
         //If we are near the player we want to target them
         if(other.tag.Equals("Player"))
         {
+            //Update pathfinding to player
             target = other.gameObject.transform;
+
+            //If we cant reach just go to closest barricade
+            if (!UpdatePathfinding())
+                FindTarget();
         }
     }
 
@@ -228,12 +331,35 @@ public class Monster : MonoBehaviour
         }
     }
 
+    private void ResetKinematics()
+    {
+        body = new Kinematic();
+        arrive = new Arrive();
+
+        body.rotSpeed = 10;
+
+        transform.position = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
+        body.position = transform.position;
+
+        arrive.character = body;
+        arrive.maxAcceleration = acceleration;
+        arrive.maxSpeed = speed;
+        arrive.targetRadius = 1;
+        arrive.slowRadius = 1;
+    }
+
     IEnumerator Stabelize()
     {
-        
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(3f);
 
+        ragdoll.TurnOff();        
 
+        animator.enabled = true;
+        stable = true;
+
+        ResetKinematics();
+        animator.SetBool("Running", true);
+        UpdatePathfinding();
     }
 }

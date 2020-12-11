@@ -9,7 +9,6 @@ public class ExplosionBall : MonoBehaviour
 
     public int damage;
 
-    SphereCollider collider;
     Animator animator;
 
     private void Start()
@@ -35,7 +34,8 @@ public class ExplosionBall : MonoBehaviour
         if(other.tag.Equals("Enemy"))
         {
             Monster enemy = other.GetComponent<Monster>();
-            enemy.Explode(transform.position, damage);
+            enemy.TakeDamage(damage, transform.position);
+            enemy.Explode(transform.position);
         }
     }
 }

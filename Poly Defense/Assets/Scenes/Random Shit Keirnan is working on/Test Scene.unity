@@ -6194,6 +6194,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: GoodPlayer
       objectReference: {fileID: 0}
+    - target: {fileID: 3923953635106020551, guid: 2d5eecb4450c3094eac5cbdd6c65888f,
+        type: 3}
+      propertyPath: money
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 4413386511276869244, guid: 2d5eecb4450c3094eac5cbdd6c65888f,
         type: 3}
       propertyPath: m_LocalPosition.x
