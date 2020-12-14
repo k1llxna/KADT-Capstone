@@ -23,5 +23,4 @@ public class Kinematic
         orientation = Mathf.Lerp(orientation, steering.angular, time * rotSpeed);
     }
 
-
 }

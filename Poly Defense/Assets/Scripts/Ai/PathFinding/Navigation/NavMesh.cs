@@ -11,7 +11,7 @@ public class NavMesh : MonoBehaviour
 
     public Color neighbourColor;
 
-    void Awake()
+    void Start()
     {
         nodes = FindObjectsOfType<MonoNode>();
 
@@ -37,10 +37,7 @@ public class NavMesh : MonoBehaviour
                 graph.AddDirectedEdge(gNode, mNode, Mathf.RoundToInt(cost));
             }
         }
-    }
 
-    private void Start()
-    {
         UpdateGraph();
     }
 
@@ -67,6 +64,7 @@ public class NavMesh : MonoBehaviour
 
         //Create Graph
         graph = new Graph<MonoNode>(nodeSet);
+
 
         //Populate NodeSet
         foreach (MonoNode node in nodes)

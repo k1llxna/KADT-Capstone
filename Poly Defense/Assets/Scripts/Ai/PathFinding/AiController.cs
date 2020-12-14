@@ -114,7 +114,7 @@ public class AiController : MonoBehaviour
         //Get best node to start at
         Node<MonoNode> startNode = mGraph.FindBestNode(transform, endNode);
         
-        var camefrom = GraphSearch.Dijkstra(graph, startNode, endNode);
+        var camefrom = GraphSearch.ASearch(graph, startNode, endNode);
 
         Node<MonoNode> currentNode = endNode;
 

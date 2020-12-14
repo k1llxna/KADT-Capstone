@@ -7165,9 +7165,26 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3923953635106020551, guid: 2d5eecb4450c3094eac5cbdd6c65888f,
         type: 3}
+      propertyPath: towers.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3923953635106020551, guid: 2d5eecb4450c3094eac5cbdd6c65888f,
+        type: 3}
       propertyPath: money
       value: 100
       objectReference: {fileID: 0}
+    - target: {fileID: 3923953635106020551, guid: 2d5eecb4450c3094eac5cbdd6c65888f,
+        type: 3}
+      propertyPath: towers.Array.data[1]
+      value: 
+      objectReference: {fileID: 8250891852237467548, guid: 28bbe1dff64f7954ea87f76e95e8dd69,
+        type: 3}
+    - target: {fileID: 3923953635106020551, guid: 2d5eecb4450c3094eac5cbdd6c65888f,
+        type: 3}
+      propertyPath: towers.Array.data[2]
+      value: 
+      objectReference: {fileID: 2594208808168148414, guid: 591d05d1d33d232458c637b79c80fbd4,
+        type: 3}
     - target: {fileID: 4413386511276869244, guid: 2d5eecb4450c3094eac5cbdd6c65888f,
         type: 3}
       propertyPath: m_LocalPosition.x

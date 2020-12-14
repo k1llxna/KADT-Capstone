@@ -259,10 +259,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8250891852237467551}
-  - component: {fileID: 8288242843829670457}
   - component: {fileID: -7530654307041194573}
+  - component: {fileID: 5578028457390940887}
   m_Layer: 0
-  m_Name: Turret_Standard
+  m_Name: Turret_Standard 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -284,34 +284,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8288242843829670457
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8250891852237467548}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e67c46a88646ec43832f6edc3dadcff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 10
-  range: 15
-  fireRate: 1
-  enemyTag: Enemy
-  rotator: {fileID: 6579745106217038879}
-  turnSpeed: 10
-  bulletPrefab: {fileID: 5198607612172153121, guid: 2b7503ff9bd0bf64eac0a0502d522f1f,
-    type: 3}
-  firePoint: {fileID: 2255057454834373818}
-  bulletsPerShot: 0
-  dmgOverTime: 20
-  useLaser: 0
-  lineRenderer: {fileID: 0}
-  impactEffect: {fileID: 0}
-  impactLight: {fileID: 0}
-  slowRatio: 0.5
 --- !u!114 &-7530654307041194573
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -324,3 +296,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e57e36bd8ddead54c8deaee30147bfd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHealth: 100
+  health: 100
+  cost: 0
+  level: 0
+  damage: 5
+  bounds: {fileID: 5578028457390940887}
+  range: 15
+  fireRate: 1
+  enemyTag: Enemy
+  rotator: {fileID: 6579745106217038879}
+  turnSpeed: 10
+  bulletPrefab: {fileID: 5198607612172153121, guid: 2b7503ff9bd0bf64eac0a0502d522f1f,
+    type: 3}
+  firePoint: {fileID: 2255057454834373818}
+  bulletsPerShot: 0
+--- !u!65 &5578028457390940887
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8250891852237467548}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.0667841, y: 1.4880581, z: 2.3507447}
+  m_Center: {x: 0.0989517, y: 0.24402905, z: -0.34760785}

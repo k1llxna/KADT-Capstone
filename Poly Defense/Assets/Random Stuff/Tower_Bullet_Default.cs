@@ -43,6 +43,12 @@ public class Tower_Bullet_Default : MonoBehaviour
         {
             e.TakeDamage(damage);
         }
+
+        Monster m = enemy.GetComponent<Monster>();
+        if(m != null)
+        {
+            m.TakeDamage(damage, transform.position);
+        }
     }
     void  HitTarget()
     {

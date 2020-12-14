@@ -79,7 +79,7 @@ public class Monster : MonoBehaviour
     void Update()
     {
         //Prevent doing nothing/errors
-        if (!target)
+        if (!target && !attacking)
         {
             FindTarget();
         }
@@ -109,6 +109,9 @@ public class Monster : MonoBehaviour
         animator.SetBool("Running", false);
         animator.SetBool("Attacking", true);
 
+        //Stop all movement
+        body.velocity = Vector3.zero;
+
         while (target)
         {
             //Make sure we are still in range of the target
@@ -126,7 +129,6 @@ public class Monster : MonoBehaviour
         }
 
         attacking = false;
-        target = null;
 
         animator.SetBool("Running", true);
         animator.SetBool("Attacking", false);
@@ -151,6 +153,7 @@ public class Monster : MonoBehaviour
             StopAllCoroutines();
             StartCoroutine(StartAttacking());
             attacking = true;
+            return;
         }
         //At current target  - change waypoint
         else if ((transform.position - currentTarget.position).magnitude <= 1f)
