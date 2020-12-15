@@ -8,7 +8,6 @@ public class MobSpawner : MonoBehaviour
 {
     public List<Transform> spawnPoints;
 
-
     private void Start()
     {
         if (PhotonNetwork.IsMasterClient)
@@ -24,7 +23,7 @@ public class MobSpawner : MonoBehaviour
         {
             foreach (Transform t in spawnPoints)
             {
-                PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "ServerEnemy"), t.position, Quaternion.identity);
+                PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FullZombie"), t.position, Quaternion.identity);
             }
 
             yield return new WaitForSeconds(5f);

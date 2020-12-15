@@ -1036,7 +1036,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &765756531471021605
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1149,8 +1149,8 @@ RectTransform:
   m_Father: {fileID: 765756531098625897}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.49800003, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -2159,12 +2159,12 @@ GameObject:
   m_Component:
   - component: {fileID: 3953841056538472520}
   - component: {fileID: 765756531879923518}
-  - component: {fileID: -4949288734426572287}
+  - component: {fileID: 765756531879923519}
   - component: {fileID: 765756532734600035}
-  - component: {fileID: -3403778685967190818}
-  - component: {fileID: -1492099066615949463}
+  - component: {fileID: 4805412544980365837}
+  - component: {fileID: -454684010890524145}
   m_Layer: 12
-  m_Name: BArricade
+  m_Name: Barricade
   m_TagString: Tower
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2203,7 +2203,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c75811e2fab650a4fa065850f9542199, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tower: {fileID: 0}
+  tower: {fileID: 765756531879923519}
   canvas: {fileID: 765756531471021600}
   panel: {fileID: 765756531109772956}
   healthBar: {fileID: 765756531073436902}
@@ -2214,7 +2214,7 @@ MonoBehaviour:
   upgradeCost: {fileID: 765756531329716121}
   repairCost: {fileID: 765756531210087733}
   sellCost: {fileID: 765756532390940416}
---- !u!114 &-4949288734426572287
+--- !u!114 &765756531879923519
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2223,7 +2223,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2664277348719433536}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4e52e3bddab4914dae5d91b3f27d753, type: 3}
+  m_Script: {fileID: 11500000, guid: db0d2b9096f60c244af8d27c499e4e14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
@@ -2231,7 +2231,7 @@ MonoBehaviour:
   cost: 10
   level: 1
   damage: 0
-  bounds: {fileID: -1492099066615949463}
+  bounds: {fileID: 4805412544980365837}
 --- !u!65 &765756532734600035
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2243,9 +2243,22 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2.125074, y: 1, z: 1.1796896}
-  m_Center: {x: 0.56253695, y: 0, z: -0.08984494}
---- !u!114 &-3403778685967190818
+  m_Size: {x: 2.3378808, y: 1, z: 1.6424916}
+  m_Center: {x: 0.54983735, y: 0, z: -0.26547933}
+--- !u!65 &4805412544980365837
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2664277348719433536}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 5.375318, y: 1, z: 2.977721}
+  m_Center: {x: 0.4624342, y: 0, z: -0.9582985}
+--- !u!114 &-454684010890524145
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2267,19 +2280,6 @@ MonoBehaviour:
   viewIdField: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!65 &-1492099066615949463
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2664277348719433536}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 5.375318, y: 1, z: 2.977721}
-  m_Center: {x: 0.4624342, y: 0, z: -0.9582985}
 --- !u!1 &3163358837482931316
 GameObject:
   m_ObjectHideFlags: 0

@@ -1154,6 +1154,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbe148f28efb699418e03b1a0295fdb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  myChar: {fileID: 0}
   speed: 5
   jumpSpeed: 10
   rotationSpeed: 6
@@ -1162,7 +1163,9 @@ MonoBehaviour:
   health: 100
   maxMana: 100
   towers:
-  - {fileID: 2664277348719433536, guid: f0c7794781f95204193a7c63122687c7, type: 3}
+  - {fileID: 2664277348719433536, guid: 9c71f29ba80bf61459c3093290e00919, type: 3}
+  - {fileID: 8250891852237467548, guid: e6cb421f0ebe30e41a5acc21c16e08ab, type: 3}
+  - {fileID: 2594208808168148414, guid: 37c14d2c34d3e06428660a0f423d0375, type: 3}
   abilities:
   - {fileID: 1786367080725358506}
   - {fileID: 1786367080725358506}

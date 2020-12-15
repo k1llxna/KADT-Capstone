@@ -4023,6 +4023,7 @@ GameObject:
   - component: {fileID: 4599651096968200431}
   - component: {fileID: 8614364880421024052}
   - component: {fileID: 5848232858134608894}
+  - component: {fileID: -3393654772691667499}
   m_Layer: 10
   m_Name: FullZombie
   m_TagString: Enemy
@@ -4190,6 +4191,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canvas: {fileID: 347329099547288296}
   slider: {fileID: 347329098459253411}
+--- !u!114 &-3393654772691667499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7446326147854798717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  observableSearch: 2
+  Synchronization: 3
+  OwnershipTransfer: 0
+  ObservedComponents: []
+  viewIdField: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &7942582855359913583
 GameObject:
   m_ObjectHideFlags: 0

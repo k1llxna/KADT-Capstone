@@ -186,6 +186,12 @@ public class Monster : MonoBehaviour
         Structure[] towers = FindObjectsOfType<Structure>();
         GameObject Base = GameObject.FindGameObjectWithTag("Base");
 
+        if(!Base)
+        {
+            Debug.Log("Cant find a base");
+            return;
+        }
+
         //If we can get to the goal position
         if (NavMesh.GetWaypoints(transform, Base.transform, out waypointList))
         {

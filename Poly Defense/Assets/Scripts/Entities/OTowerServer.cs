@@ -1,45 +1,18 @@
-﻿using System.Collections;
+﻿using Photon.Pun;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class OTower : Structure
+public class OTowerServer : OTower
 {
 
-    public int cost;
-
-    public int level;
-    public float damage;
-
-    protected int sellPrice;
-
-    public BoxCollider bounds;
-
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         Placed();
     }
-
     // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
-    public int GetRepairCost()
-    {
-        //We want 1 mana to be equal to 10hp
-        float totalRepair = maxHealth - health;
-        int repairCost = Mathf.CeilToInt(totalRepair /= 10);
-        return repairCost;
-    }
-
-    public int GetSellPrice()
-    {
-        return sellPrice;
-    }
-
-    public virtual void Upgrade()
+    public override void Upgrade()
     {
         level++;
         cost += 100 * (level - 1);
@@ -57,16 +30,16 @@ public class OTower : Structure
         Placed();
     }
 
-    public virtual void Sell(Character player)
+    public override void Sell(Character player)
     {
         //Player gets 65% back upon selling
         player.GiveMoney(Mathf.RoundToInt(cost * 0.65f));
 
         //Kill object
-        Die();
+        photonView.RPC("RPC_Die", RpcTarget.AllBufferedViaServer);
     }
 
-    public virtual void Repair()
+    public override void Repair()
     {
         if(health < maxHealth)
         {
@@ -79,9 +52,8 @@ public class OTower : Structure
         }
     }
 
-    public virtual void Placed()
+    public override void Placed()
     {
-
         Debug.Log("Disabaling Nodes");
         NavMesh graph = FindObjectOfType<NavMesh>();
 
@@ -90,11 +62,33 @@ public class OTower : Structure
 
     public override void Die()
     {
-        NavMesh graph = FindObjectOfType<NavMesh>();
+        photonView.RPC("RPC_Die", RpcTarget.AllBufferedViaServer);
+    }
 
-        graph.EnableBounds(bounds.bounds);
 
+
+    [PunRPC]
+    void RPC_SetTransform(Transform tower)
+    {
+        transform.position = tower.position;
+        transform.rotation = tower.rotation;
+    }
+    [PunRPC]
+    void RPC_Die()
+    {
         base.Die();
     }
+    [PunRPC]
+    void RPC_Repair()
+    {
+        base.Repair();
+    }
+    [PunRPC]
+    void RPC_Upgrade()
+    {
+        base.Upgrade();
+    }
+
+
 
 }
