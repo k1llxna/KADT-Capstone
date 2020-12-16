@@ -589,7 +589,7 @@ namespace Photon.Compression.Internal
 				if (isEnum)
 				{
 					enumUnderType = "(" + System.Enum.GetUnderlyingType(fieldinfo.FieldType).Name + ")";
-					enumType = "(" + ftypename + ")";
+					enumType = "(" + ffulltype + ")";
 				}
 
 				Generate_FieldFrame(fieldinfo, sbFrame, fname, ftypename, ffulltype, isNestedPackObj, packAttr);
@@ -1024,9 +1024,9 @@ namespace Photon.Compression.Internal
 				{
 					sb.______("var temp = ", enumUnderCast, "packable.myTestEnum;").EOL();
 					sb.______("var flag = ", fname, "Unpacker(ref temp, buffer, ref bitposition, frameId, writeFlags);").EOL();
-					sb.______("packable.", fname, "= ", enumTypeCast, "temp;").EOL();
-				}
-				if (fInfo.FieldType.IsGenericType)
+					sb.______("packable.", fname, " = ", enumTypeCast, "temp;").EOL();
+                }
+				else if (fInfo.FieldType.IsGenericType)
 					sb.______("var flag = ", fname, "Unpacker(ref packable.", fname, ", packable.",fname,"_mask, buffer, ref bitposition, frameId, writeFlags);").EOL();
 				else
 					sb.______("var flag = ", fname, "Unpacker(ref packable.", fname, ", buffer, ref bitposition, frameId, writeFlags);").EOL();

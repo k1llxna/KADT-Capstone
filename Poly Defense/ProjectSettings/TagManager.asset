@@ -9,6 +9,8 @@ TagManager:
   - Base
   - Tower
   - Ground
+  - Bullet
+  - Chat
   layers:
   - Default
   - TransparentFX
