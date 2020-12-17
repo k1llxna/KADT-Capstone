@@ -2358,7 +2358,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   health: 100
-  cost: 0
+  cost: 50
   level: 1
   damage: 0
   bounds: {fileID: 5578028457390940887}

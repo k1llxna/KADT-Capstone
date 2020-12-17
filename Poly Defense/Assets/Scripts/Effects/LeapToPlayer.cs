@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class LeapToPlayer : MonoBehaviour
+public class LeapToPlayer : MonoBehaviourPun
 {
     Rigidbody rb;
     public float explosionForce;
@@ -21,8 +22,12 @@ public class LeapToPlayer : MonoBehaviour
     {
         if (other.tag.Equals("Player"))
         {
-            Vector3 force = (other.transform.position + offset - transform.position).normalized * explosionForce;
-            rb.AddForce(force, ForceMode.Impulse);
+            Character player = other.GetComponent<Character>();
+            if (player.money < player.maxMoney && player.photonView.IsMine)
+            {
+                Vector3 force = (other.transform.position + offset - transform.position).normalized * explosionForce;
+                rb.AddForce(force, ForceMode.Impulse);
+            }
         }
     }
     
@@ -30,13 +35,18 @@ public class LeapToPlayer : MonoBehaviour
     {
         if (other.tag.Equals("Player"))
         {
-            Vector3 force = (other.transform.position + offset - transform.position).normalized * attractionForce;
-            rb.AddForce(force, ForceMode.Acceleration);
 
-            if((other.transform.position + offset - transform.position).magnitude <= 1)
+            Character player = other.GetComponent<Character>();
+            if (player.money < player.maxMoney && player.photonView.IsMine)
             {
-                other.gameObject.GetComponent<Character>().GiveMoney(5);
-                Destroy(gameObject);
+                Vector3 force = (other.transform.position + offset - transform.position).normalized * attractionForce;
+                rb.AddForce(force, ForceMode.Acceleration);
+
+                if ((other.transform.position + offset - transform.position).magnitude <= 1)
+                {
+                    other.gameObject.GetComponent<Character>().GiveMoney(5);
+                    Destroy(gameObject);
+                }
             }
         }
     }

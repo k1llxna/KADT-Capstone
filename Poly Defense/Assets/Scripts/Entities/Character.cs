@@ -29,7 +29,7 @@ public class Character : MonoBehaviourPun
     protected enum ControllerType {  SimpleMove, Move };
     [SerializeField] protected ControllerType type;
 
-    protected int maxMoney = 100;
+    public int maxMoney = 100;
     public int money;
 
     protected float manaRefreshRate = 0;
