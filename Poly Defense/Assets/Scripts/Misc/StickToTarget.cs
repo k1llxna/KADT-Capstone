@@ -13,12 +13,12 @@ public class StickToTarget : MonoBehaviour
     {
         if (target == null)
         {
-            foreach (ServerPlayer player in GameObject.FindObjectsOfType<ServerPlayer>())
+            foreach (Character player in GameObject.FindObjectsOfType<Character>())
             {
-                if (player.photonView.IsMine)
-                {
+                //if (player.photonView.IsMine)
+                //{
                     target = player.transform;
-                }
+                //}
             }
         }
         else

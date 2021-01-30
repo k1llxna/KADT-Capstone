@@ -15,9 +15,11 @@ public class OTower : Structure
     public BoxCollider bounds;
 
     // Start is called before the first frame update
-    void Start()
+    protected void Start()
     {
         Placed();
+
+        base.Start();
     }
 
     // Update is called once per frame

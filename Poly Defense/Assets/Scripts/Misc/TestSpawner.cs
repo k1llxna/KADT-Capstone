@@ -8,6 +8,8 @@ public class TestSpawner : MonoBehaviour
     public Transform[] spawnPoint;
     bool spawning = true;
 
+    int spawnNum = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,11 +22,16 @@ public class TestSpawner : MonoBehaviour
         {
             int random = Random.Range(0, spawnPoint.Length);
 
-            Main newMonster = Instantiate(monster, spawnPoint[random].position, Quaternion.identity).GetComponent<Main>();
+            Monster newMonster = Instantiate(monster, spawnPoint[random].position, Quaternion.identity).GetComponent<Monster>();
+
+            newMonster.damage += spawnNum * 1;
+            newMonster.maxHealth += spawnNum * 5;
+            newMonster.health = newMonster.maxHealth;
+            newMonster.UpdateHealthBar();
+
+            spawnNum++;
 
             yield return new WaitForSeconds(2f);
-
-            spawning = false;
         }
     }
 }

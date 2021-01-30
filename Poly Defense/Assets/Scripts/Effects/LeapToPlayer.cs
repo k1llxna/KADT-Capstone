@@ -11,6 +11,8 @@ public class LeapToPlayer : MonoBehaviourPun
 
     Vector3 offset = new Vector3(0, 1, 0);
 
+    public AudioClip pickupClip;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -23,7 +25,7 @@ public class LeapToPlayer : MonoBehaviourPun
         if (other.tag.Equals("Player"))
         {
             Character player = other.GetComponent<Character>();
-            if (player.money < player.maxMoney && player.photonView.IsMine)
+            if (player.money < player.maxMoney /*&& player.photonView.IsMine*/)
             {
                 Vector3 force = (other.transform.position + offset - transform.position).normalized * explosionForce;
                 rb.AddForce(force, ForceMode.Impulse);
@@ -37,7 +39,7 @@ public class LeapToPlayer : MonoBehaviourPun
         {
 
             Character player = other.GetComponent<Character>();
-            if (player.money < player.maxMoney && player.photonView.IsMine)
+            if (player.money < player.maxMoney /*&& player.photonView.IsMine*/)
             {
                 Vector3 force = (other.transform.position + offset - transform.position).normalized * attractionForce;
                 rb.AddForce(force, ForceMode.Acceleration);
@@ -45,6 +47,7 @@ public class LeapToPlayer : MonoBehaviourPun
                 if ((other.transform.position + offset - transform.position).magnitude <= 1)
                 {
                     other.gameObject.GetComponent<Character>().GiveMoney(5);
+                    player.GetComponent<AudioSource>().PlayOneShot(pickupClip);
                     Destroy(gameObject);
                 }
             }

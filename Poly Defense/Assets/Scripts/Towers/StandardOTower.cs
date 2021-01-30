@@ -25,12 +25,15 @@ public class StandardOTower : OTower
 
     public int bulletsPerShot;
 
+    public AudioClip shootClip;
+
     // Start is called before the first frame update
     void Start()
     {
         // per x sec
-        Placed();
         InvokeRepeating("UpdateTarget", 0f, 0.5f);
+
+        base.Start();
     }
 
     void UpdateTarget()
@@ -96,6 +99,11 @@ public class StandardOTower : OTower
         if (bullet != null)
         {
             bullet.Seek(target);
+
+            if (target)
+            {
+                GetComponent<AudioSource>().PlayOneShot(shootClip);
+            }
         }
     }
 

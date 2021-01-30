@@ -42,11 +42,19 @@ public class UIAbilityController : MonoBehaviour
             abilityCosts[i] = ability.cost;
             i++;
         }
+
+        player = FindObjectOfType<Character>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(player == null)
+        {
+            player = FindObjectOfType<Character>();
+        }
+
+
         //Change costs to res if we cant afford
         for(int i = 0; i < towerCostTexts.Length; i++)
         {
