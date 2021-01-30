@@ -110,6 +110,7 @@ public class ServerPlayer : Character
         transform.rotation = newRotation;
 
         photonView.RPC("RPC_SetRotation", RpcTarget.All, transform.rotation);
+        photonView.RPC("RPC_SetPosition", RpcTarget.All, transform.position);
 
     }
 
@@ -201,7 +202,7 @@ public class ServerPlayer : Character
             building = true;
 
             //This would be a tempTower array, and will instantiate the real tower later
-            GameObject towerObject = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "BArricade"), new Vector3(100, 100, 100), transform.rotation);
+            GameObject towerObject = Instantiate(towers[towerNum], new Vector3(100, 100, 100), transform.rotation);
 
             RaycastHit hit;
             Vector3 offset = new Vector3(0, 1, 0);
@@ -230,10 +231,12 @@ public class ServerPlayer : Character
             //While(!hasTurned)
             //allow option for fine rotatating of the newly built tower
 
+            
+            photonView.RPC("BuildTower", RpcTarget.AllBufferedViaServer, towerObject.transform.position, towerNum);
+            Destroy(towerObject);
             building = false;
         }
     }
-
 
     [PunRPC]
     void Attack(Vector3 position, Quaternion rotation)
@@ -261,8 +264,8 @@ public class ServerPlayer : Character
         animator.SetBool("Grounded", isGrounded);
     }
     [PunRPC]
-    void BuildTower(Vector3 position)
+    void BuildTower(Vector3 position, int towerNum)
     {
-        Instantiate(towers[0], position, transform.rotation);
+        Instantiate(towers[towerNum], position, transform.rotation);
     }
 }

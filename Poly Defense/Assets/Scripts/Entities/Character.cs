@@ -6,6 +6,8 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class Character : MonoBehaviourPun
 {
+    public Character myChar;
+
     protected CharacterController controller;
     protected Animator animator;
     public float speed;
@@ -41,6 +43,9 @@ public class Character : MonoBehaviourPun
         //Always start with mana regen
         manaRefreshTime = 3;
         mana = 20;
+        money = 100;
+
+        myChar = this;
 
         controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();

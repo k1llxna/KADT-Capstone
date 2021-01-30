@@ -1,6 +1,7 @@
 ﻿using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class ServerMage : ServerPlayer
@@ -17,9 +18,9 @@ public class ServerMage : ServerPlayer
     }
 
     [PunRPC]
-    void BuildTower(Vector3 position)
+    void BuildTower(Vector3 position, int towerNum)
     {
-        Instantiate(towers[0], position, transform.rotation);
+        Instantiate(towers[towerNum], position, transform.rotation);
     }
 
     [PunRPC]

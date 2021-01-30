@@ -5137,7 +5137,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1136188864997818612}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.0021677613, y: 0.806, z: 0.0142326355}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.2, y: 0.8, z: 1.2}
   m_Children: []
   m_Father: {fileID: 7816351784065246443}
@@ -5917,8 +5917,9 @@ GameObject:
   - component: {fileID: 3750767077159967343}
   - component: {fileID: 2071856718039449680}
   - component: {fileID: 1605214848449345386}
+  - component: {fileID: 3068660182982433042}
   m_Layer: 12
-  m_Name: LazerOTower
+  m_Name: LazerOTower ServerBased
   m_TagString: Tower
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6103,6 +6104,28 @@ MonoBehaviour:
   upgradeCost: {fileID: 1925883308894175745}
   repairCost: {fileID: 6965181762180808932}
   sellCost: {fileID: 218734512980069386}
+--- !u!114 &3068660182982433042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2594208808168148414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  observableSearch: 2
+  Synchronization: 3
+  OwnershipTransfer: 0
+  ObservedComponents: []
+  viewIdField: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &3967928322829887263
 GameObject:
   m_ObjectHideFlags: 0
@@ -11471,7 +11494,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5791355877392676237}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.752, z: 0}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4533689618070871250}
@@ -12112,7 +12135,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9021593808886178473}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.13, y: 3.698, z: 1.534}
+  m_LocalPosition: {x: -0.13, y: 2.442, z: 1.534}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7816351784065246443}

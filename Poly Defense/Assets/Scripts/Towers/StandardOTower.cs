@@ -29,6 +29,7 @@ public class StandardOTower : OTower
     void Start()
     {
         // per x sec
+        Placed();
         InvokeRepeating("UpdateTarget", 0f, 0.5f);
     }
 
@@ -66,7 +67,7 @@ public class StandardOTower : OTower
     // Update is called once per frame
     void Update()
     {
-        if (targetEnemy)
+        if (target)
         {
             LockOnTarget();
         }
