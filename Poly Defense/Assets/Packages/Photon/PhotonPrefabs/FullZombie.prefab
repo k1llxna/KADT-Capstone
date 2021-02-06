@@ -4166,6 +4166,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
+  health: 0
   damage: 10
   speed: 1
   acceleration: 5
@@ -4175,6 +4176,8 @@ MonoBehaviour:
   healthText: {fileID: 347329098920165097}
   dropOnDeath: {fileID: 8489989380821977922, guid: c3a4d1d13ea2d85408e756e7a4da6f1a,
     type: 3}
+  powerups:
+  - {fileID: 6968658704928883457, guid: 736ed9ff8d94e914ebf290321e588c19, type: 3}
   rb: {fileID: 5278073491702298720}
   ragdoll: {fileID: 7000445495411773879}
   isGrounded: 1

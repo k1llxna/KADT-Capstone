@@ -11,7 +11,7 @@ public class Monster : MonoBehaviour
 {
     //Attributes
     public float maxHealth;
-    float health;
+    public float health;
 
     public int damage;
     public float speed;
@@ -38,6 +38,7 @@ public class Monster : MonoBehaviour
 
     //Items
     public GameObject dropOnDeath;
+    public GameObject[] powerups;
 
     public Rigidbody rb;
     public RagDollEffects ragdoll;
@@ -46,6 +47,14 @@ public class Monster : MonoBehaviour
     bool stable = true;
     bool attacking = false;
     public bool isGrounded = true;
+
+    enum States {     
+        IDLE,
+        PATHFINDING,
+        ATTACKING,            
+    }
+
+    States enemyState;
 
     // Start is called before the first frame update
     void Start()
@@ -78,18 +87,53 @@ public class Monster : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Prevent doing nothing/errors
-        if (!target && !attacking)
-        {
-            FindTarget();
-        }
 
-        if (target && !attacking && stable)
+        switch (enemyState)
         {
-            Move();
-        }
+            case States.IDLE:
 
-        ShowMovement();
+                target = null;
+
+                animator.SetBool("Running", false);
+                body.velocity = Vector3.zero;
+
+                if (FindTarget())
+                    enemyState = States.PATHFINDING;
+
+                break;
+
+            case States.PATHFINDING:
+
+                animator.SetBool("Running", true);
+                //If we've lost a target or cant reach target go back to idle
+                if (!target || !UpdatePathfinding())
+                {
+                    enemyState = States.IDLE;
+                    break;
+                }
+
+                if ((transform.position - target.position).magnitude <= 1.5f)
+                {
+                    //Set enemy state to attacking
+                    enemyState = States.ATTACKING;
+                    break;
+                }
+
+                Move();
+
+                ShowMovement();
+
+                break;
+
+            case States.ATTACKING:
+                if (!attacking)
+                {
+                    StartCoroutine(StartAttacking());
+                }
+                if (!target)
+                    enemyState = States.IDLE;
+                break;
+        }
     }
 
     protected virtual void Attack()
@@ -106,6 +150,11 @@ public class Monster : MonoBehaviour
 
     IEnumerator StartAttacking()
     {
+        //Broken animation - to keepo enemy in place
+        Vector3 position = transform.position;
+
+        attacking = true;
+
         animator.SetBool("Running", false);
         animator.SetBool("Attacking", true);
 
@@ -114,6 +163,12 @@ public class Monster : MonoBehaviour
 
         while (target)
         {
+            //As long as we are stable, keep enemy in place
+            if(stable)
+            {
+                transform.position = position;
+            }
+
             //Make sure we are still in range of the target
             //Upon killing the target, target will be instantly replaced, so dont keep attacking when change targets aswell - unless theyre right beside somehow
             if ((transform.position - target.position).magnitude <= 1.5f)
@@ -130,8 +185,9 @@ public class Monster : MonoBehaviour
 
         attacking = false;
 
-        animator.SetBool("Running", true);
         animator.SetBool("Attacking", false);
+
+        enemyState = States.IDLE;
 
         //UpdatePathfinding();
     }
@@ -147,16 +203,9 @@ public class Monster : MonoBehaviour
     void Move()
     {
         //If we are at the target
-        if ((transform.position - target.position).magnitude <= 1.5f)
-        {
-            //This can be an Ienumurator and we can call a bool that stops movement
-            StopAllCoroutines();
-            StartCoroutine(StartAttacking());
-            attacking = true;
-            return;
-        }
+       
         //At current target  - change waypoint
-        else if ((transform.position - currentTarget.position).magnitude <= 1f)
+        if ((transform.position - currentTarget.position).magnitude <= 1f)
         {
             //We are right behind the target, we cant pathfind as this is the last node
             if (currentWaypoint == 1)
@@ -164,11 +213,6 @@ public class Monster : MonoBehaviour
                 currentWaypoint--;
                 currentTarget = waypointList[currentWaypoint];
                 arrive.target = currentTarget;
-            }
-            else if (!UpdatePathfinding() && currentWaypoint != 0) //Dont pathfind if we are at our destination
-            {
-                Debug.Log("Cant update Pathfinding");
-                FindTarget();
             }
         }
 
@@ -180,7 +224,7 @@ public class Monster : MonoBehaviour
         animator.SetBool("Running", true);
     }
 
-    void FindTarget()
+    bool FindTarget()
     {
         //Structure should include Player's Base
         Structure[] towers = FindObjectsOfType<Structure>();
@@ -189,7 +233,7 @@ public class Monster : MonoBehaviour
         if(!Base)
         {
             Debug.Log("Cant find a base");
-            return;
+            return false;
         }
 
         //If we can get to the goal position
@@ -198,8 +242,9 @@ public class Monster : MonoBehaviour
             currentWaypoint = waypointList.Count - 1;
             currentTarget = waypointList[currentWaypoint];
             arrive.target = currentTarget;
-            target = Base.transform;
+            target = Base.transform;         
             Debug.Log("Attacking the base");
+            return true;
         }
         else
         {
@@ -217,15 +262,22 @@ public class Monster : MonoBehaviour
                     arrive.target = currentTarget;
                     target = tower.transform;
                     Debug.Log("Attacking the closest Tower");
-                    break;
+                    return true;
                 }
 
             }
         }
+
+        return false;
     }
 
     bool UpdatePathfinding()
     {
+        //We are already infront of the target, we dont need to update
+        if(currentWaypoint <= 1)
+        {
+            return true;
+        }
 
         //If we can get to the goal position
         if (NavMesh.GetWaypoints(transform, target.transform, out waypointList))
@@ -252,7 +304,7 @@ public class Monster : MonoBehaviour
         }
     }
 
-    void UpdateHealthBar()
+    public void UpdateHealthBar()
     {
         healthBar.value = health / maxHealth;
         healthText.SetText(Mathf.RoundToInt(health).ToString());
@@ -280,6 +332,26 @@ public class Monster : MonoBehaviour
         else
         {
             Debug.Log("No Drops Enabled");
+        }
+
+        if (powerups.Length > 0)
+        {
+            int chance = Random.Range(0, 20);
+
+            if (chance > 15)
+            {
+                int powerupDrop = Random.Range(0, powerups.Length);
+
+                Debug.Log("Im dying and spawning: " + powerups[powerupDrop] + " drops");
+
+                Vector3 offset = new Vector3(0, 1, 0);
+
+                    Instantiate(powerups[powerupDrop], transform.position + offset, transform.rotation);
+            }                    
+        }
+        else
+        {
+            Debug.Log("No PowerUps Enabled");
         }
 
         Explode(from);
@@ -325,9 +397,6 @@ public class Monster : MonoBehaviour
             //Update pathfinding to player
             target = other.gameObject.transform;
 
-            //If we cant reach just go to closest barricade
-            if (!UpdatePathfinding())
-                FindTarget();
         }
     }
 
@@ -336,7 +405,7 @@ public class Monster : MonoBehaviour
         //Upon a player leaving the attack range, we want to reset the target
         if (other.tag.Equals("Player"))
         {
-            FindTarget();
+            target = null;
         }
     }
 
@@ -369,6 +438,5 @@ public class Monster : MonoBehaviour
 
         ResetKinematics();
         animator.SetBool("Running", true);
-        UpdatePathfinding();
     }
 }

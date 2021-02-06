@@ -6,9 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: Assets/Scenes/MainMenu.unity
-    guid: 3cb855e075996c449840775c180bc43c
-  - enabled: 0
     path: Assets/Scenes/MainScene.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 1
@@ -17,4 +14,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Multiplayer/Multiplayer.unity
     guid: a3226234e6797f94fa804f3b2565be3b
+  - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: 3cb855e075996c449840775c180bc43c
+  - enabled: 1
+    path: Assets/Scenes/Random Shit Keirnan is working on/Test Level.unity
+    guid: 132d0956b7e60c546a17bf5de7f73100
   m_configObjects: {}
