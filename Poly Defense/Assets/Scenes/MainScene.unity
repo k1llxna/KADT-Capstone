@@ -5621,7 +5621,7 @@ MonoBehaviour:
   sniperTurret:
     prefab: {fileID: 5839558371482256074, guid: af7d084d5a97fb841ac1ac46f58fdcb2,
       type: 3}
-    upgradedPrefab: {fileID: 7714683219830922425, guid: 431433ee30bcaf44e9f4ede681fde1ad,
+    upgradedPrefab: {fileID: 4601274511772144820, guid: 431433ee30bcaf44e9f4ede681fde1ad,
       type: 3}
     cost: 600
     upgradeCost: 300
