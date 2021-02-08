@@ -392,7 +392,6 @@ GameObject:
   - component: {fileID: 2502905712515504040}
   - component: {fileID: 1879928208360857001}
   - component: {fileID: 337868914317536213}
-  - component: {fileID: 7418775565582477552}
   m_Layer: 0
   m_Name: Capsule
   m_TagString: Untagged
@@ -461,20 +460,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!136 &7418775565582477552
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7403371095599298828}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8250891851693141663
 GameObject:
   m_ObjectHideFlags: 0
@@ -486,7 +471,6 @@ GameObject:
   - component: {fileID: 8250891851693141651}
   - component: {fileID: 8250891851693141648}
   - component: {fileID: 8250891851693141649}
-  - component: {fileID: 8250891851693141662}
   m_Layer: 0
   m_Name: Base
   m_TagString: Untagged
@@ -556,20 +540,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!136 &8250891851693141662
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8250891851693141663}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5000001
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!1 &8250891852237467548
 GameObject:
   m_ObjectHideFlags: 0
@@ -659,6 +629,7 @@ MonoBehaviour:
   bulletPrefab: {fileID: 0}
   firePoint: {fileID: 0}
   bulletsPerShot: 0
+  shootClip: {fileID: 0}
 --- !u!1 &9089085365081439764
 GameObject:
   m_ObjectHideFlags: 0
