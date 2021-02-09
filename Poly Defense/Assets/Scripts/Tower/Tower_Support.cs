@@ -1,7 +1,8 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class Tower : MonoBehaviour
+public class Tower_Support : MonoBehaviour
 {
     public float health;
 
@@ -11,12 +12,12 @@ public class Tower : MonoBehaviour
     [Header("Attributes")]
     public float range = 15f;
 
-    [Header("Bullets")]
+    [Header("Heal")]
     public float fireRate = 1f;
     private float fireCountdown = 0f;
 
     [Header("Unity Fields")]
-    public string enemyTag = "Enemy";
+    public string allyTag = "Tower";
 
     public Transform rotator;
     public float turnSpeed = 10f;
@@ -43,7 +44,7 @@ public class Tower : MonoBehaviour
 
     void UpdateTarget()
     {
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag(enemyTag);
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag(allyTag);
         // store closest enemy found
         float shortestDistance = Mathf.Infinity;
         GameObject nearestEnemy = null;
@@ -62,7 +63,8 @@ public class Tower : MonoBehaviour
         {
             target = nearestEnemy.transform;
             targetEnemy = nearestEnemy.GetComponent<Enemy>();
-        } else
+        }
+        else
         {
             target = null;
         }
@@ -89,7 +91,8 @@ public class Tower : MonoBehaviour
         if (useLaser)
         {
             Laser();
-        } else
+        }
+        else
         {
             if (fireCountdown <= 0)
             {
@@ -149,4 +152,3 @@ public class Tower : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, range);
     }
 }
-

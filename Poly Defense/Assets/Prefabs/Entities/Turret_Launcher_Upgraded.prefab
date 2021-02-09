@@ -925,7 +925,7 @@ GameObject:
   - component: {fileID: 4981641184558656503}
   m_Layer: 0
   m_Name: Turret_Launcher_Upgraded
-  m_TagString: Untagged
+  m_TagString: Tower
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
