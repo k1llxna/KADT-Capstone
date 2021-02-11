@@ -29,7 +29,7 @@ public class ServerPlayer : Character
 
 
                 else if (Input.GetKeyDown("5"))
-                    abilities[0].Use(this);
+                    photonView.RPC("RPC_Ability", RpcTarget.All);
                 else if (Input.GetKeyDown("6"))
                     abilities[0].Use(this);
                 else if (Input.GetKeyDown("7"))
@@ -108,10 +108,6 @@ public class ServerPlayer : Character
         float yLerp = Mathf.LerpAngle(transform.eulerAngles.y, Camera.main.transform.eulerAngles.y, 0.05f);
         Quaternion newRotation = Quaternion.Euler(transform.rotation.x, yLerp, transform.rotation.z);
         transform.rotation = newRotation;
-
-        photonView.RPC("RPC_SetRotation", RpcTarget.All, transform.rotation);
-        photonView.RPC("RPC_SetPosition", RpcTarget.All, transform.position);
-
     }
 
     protected override void Target()
@@ -242,7 +238,6 @@ public class ServerPlayer : Character
     void Attack(Vector3 position, Quaternion rotation)
     {
     }
-
     [PunRPC]
     void RPC_SetPosition(Vector3 position)
     {
@@ -267,5 +262,10 @@ public class ServerPlayer : Character
     void BuildTower(Vector3 position, int towerNum)
     {
         Instantiate(towers[towerNum], position, transform.rotation);
+    }
+    [PunRPC]
+    void RPC_Ability()
+    {
+        abilities[0].Use(this);
     }
 }

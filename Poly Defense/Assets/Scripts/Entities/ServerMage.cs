@@ -43,5 +43,10 @@ public class ServerMage : ServerPlayer
     {
         animator.SetBool("Grounded", isGrounded);
     }
+    [PunRPC]
+    void RPC_Ability()
+    {
+        abilities[0].Use(this);
+    }
 
 }

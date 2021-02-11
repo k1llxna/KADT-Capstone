@@ -22,6 +22,10 @@ public class Character : MonoBehaviourPun
 
     protected Vector3 moveDirection = Vector3.zero;
 
+    public float acceleration;
+    public float deceleration;
+    Vector3 velocity = Vector3.zero;
+
     public GameObject[] towers;
     public Ability[] abilities;
     protected bool building;
@@ -29,7 +33,7 @@ public class Character : MonoBehaviourPun
     protected enum ControllerType {  SimpleMove, Move };
     [SerializeField] protected ControllerType type;
 
-    protected int maxMoney = 100;
+    public int maxMoney = 100;
     public int money;
 
     protected float manaRefreshRate = 0;
@@ -37,9 +41,12 @@ public class Character : MonoBehaviourPun
     protected float manaRefreshTime = 0; //Time till cooldown is over
     protected int manaGain = 1; //How much per Tick
 
+    public GameObject powerUp;
+
     // Start is called before the first frame update
     void Start()
     {
+
         //Always start with mana regen
         manaRefreshTime = 3;
         mana = 20;
@@ -82,9 +89,16 @@ public class Character : MonoBehaviourPun
     // Update is called once per frame
     void Update()
     {
-
+        //Set movement and respected animator variables
         Move();
 
+        //Get information of targeted object with raycast
+        Target();
+
+        //Mana regen
+        UpdateMana();
+
+        //Use abilities, attack and build while not already building
         if (!building)
         {
             if (Input.GetKeyDown("1"))
@@ -108,18 +122,15 @@ public class Character : MonoBehaviourPun
 
             if (Input.GetMouseButtonDown(0))
                 Attack();
-
-            //Get information of targeted object with raycast
-            Target();
         }
 
-        if(controller.isGrounded)
+        //Ground the character
+        if (controller.isGrounded)
         {
             isGrounded = true;
             animator.SetBool("Grounded", true);
         }
-
-        UpdateMana();
+    
     }
 
     IEnumerator Building(int towerNum)
@@ -187,6 +198,7 @@ public class Character : MonoBehaviourPun
                 if (isGrounded)
                 {
                     moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+                    velocity += moveDirection.normalized * acceleration * Time.deltaTime;
 
                     moveDirection = transform.TransformDirection(moveDirection);
 
@@ -205,6 +217,8 @@ public class Character : MonoBehaviourPun
                     float tempY = moveDirection.y;
 
                     moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+                    velocity += moveDirection * acceleration * Time.deltaTime;
+
 
                     moveDirection = transform.TransformDirection(moveDirection);
 
@@ -216,9 +230,15 @@ public class Character : MonoBehaviourPun
                 }
 
 
+                velocity -= velocity * deceleration * Time.deltaTime;
+
+                if (velocity.magnitude > moveDirection.magnitude)
+                    velocity = moveDirection;
+
                 controller.Move(moveDirection * Time.deltaTime);
 
-                animator.SetFloat("Speed", Mathf.Abs(moveDirection.z));
+                animator.SetFloat("Velocity X", velocity.x);
+                animator.SetFloat("Velocity Y", velocity.z);
 
                 break;
         }

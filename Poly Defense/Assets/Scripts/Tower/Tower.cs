@@ -5,6 +5,7 @@ public class Tower : MonoBehaviour
 {
     public float health;
 
+    [SerializeField]
     private Transform target;
     private Enemy targetEnemy;
 
@@ -141,7 +142,6 @@ public class Tower : MonoBehaviour
     public void DealDamage(float damage)
     {
         health -= damage;
-
     }
 
     void OnDrawGizmosSelected()
