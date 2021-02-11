@@ -6,63 +6,65 @@ public class Tower_Support : MonoBehaviour
 {
     public float health;
 
+    [SerializeField]
     private Transform target;
-    private Enemy targetEnemy;
+    private Tower targetTower;
 
     [Header("Attributes")]
     public float range = 15f;
 
-    [Header("Heal")]
+    [Header("Bullets")]
     public float fireRate = 1f;
     private float fireCountdown = 0f;
+    public GameObject bulletPrefab;
+
+    [Header("Heal Rate (Per Sec)")]
+    public float healRate = 1f;
 
     [Header("Unity Fields")]
     public string allyTag = "Tower";
-
     public Transform rotator;
     public float turnSpeed = 10f;
-
-    public GameObject bulletPrefab;
     public Transform firePoint;
 
-    public int bulletsPerShot;
 
     [Header("Laser Components")]
     public int dmgOverTime = 20;
     public bool useLaser = false;
     public LineRenderer lineRenderer;
     public ParticleSystem impactEffect;
-    public Light impactLight;
     public float slowRatio = .5f;
+
+    
 
     // Start is called before the first frame update
     void Start()
     {
         // per x sec
-        InvokeRepeating("UpdateTarget", 0f, 0.5f);
+        InvokeRepeating("UpdateTowerTarget", 0f, 0.5f);
     }
 
     void UpdateTarget()
     {
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag(allyTag);
-        // store closest enemy found
+        GameObject[] towers = GameObject.FindGameObjectsWithTag(allyTag);
+        // store closest tower found
         float shortestDistance = Mathf.Infinity;
-        GameObject nearestEnemy = null;
+        GameObject nearestTower = null;
 
-        foreach (GameObject enemy in enemies)
+        foreach (GameObject tower in towers)
         {
-            float distanceToEnemy = Vector3.Distance(transform.position, enemy.transform.position);
-            if (distanceToEnemy < shortestDistance)
+            float distanceToTower = Vector3.Distance(transform.position, tower.transform.position);
+            if (distanceToTower < shortestDistance)
             {
-                shortestDistance = distanceToEnemy;
-                nearestEnemy = enemy;
+                shortestDistance = distanceToTower;
+                nearestTower = tower;
             }
         }
 
-        if (nearestEnemy != null && shortestDistance <= range)
+        if (nearestTower != null && shortestDistance <= range)
         {
-            target = nearestEnemy.transform;
-            targetEnemy = nearestEnemy.GetComponent<Enemy>();
+            target = nearestTower.transform;
+            targetTower = nearestTower.GetComponent<Tower>();
         }
         else
         {
@@ -81,7 +83,6 @@ public class Tower_Support : MonoBehaviour
                 {
                     lineRenderer.enabled = false;
                     impactEffect.Stop();
-                    impactLight.enabled = false;
                 }
             }
             return;
@@ -105,13 +106,10 @@ public class Tower_Support : MonoBehaviour
 
     void Laser()
     {
-        targetEnemy.TakeDamage(dmgOverTime * Time.deltaTime);
-        targetEnemy.Slow(slowRatio);
         if (!lineRenderer.enabled)
         {
             lineRenderer.enabled = true;
             impactEffect.Play();
-            impactLight.enabled = true;
         }
         lineRenderer.SetPosition(0, firePoint.position);
         lineRenderer.SetPosition(1, target.position);

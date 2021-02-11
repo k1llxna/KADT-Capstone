@@ -5,6 +5,7 @@ public class Tower : MonoBehaviour
 {
     public float health;
 
+    [SerializeField]
     private Transform target;
     private Enemy targetEnemy;
 
