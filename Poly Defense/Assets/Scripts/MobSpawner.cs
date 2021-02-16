@@ -1,5 +1,4 @@
-﻿using Photon.Pun;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -10,11 +9,7 @@ public class MobSpawner : MonoBehaviour
 
     private void Start()
     {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            StartCoroutine(Spawn());
-        }
-        
+            StartCoroutine(Spawn());        
     }
 
     IEnumerator Spawn()
@@ -23,7 +18,7 @@ public class MobSpawner : MonoBehaviour
         {
             foreach (Transform t in spawnPoints)
             {
-                PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FullZombie"), t.position, Quaternion.identity);
+                //PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "FullZombie"), t.position, Quaternion.identity);
             }
 
             yield return new WaitForSeconds(5f);

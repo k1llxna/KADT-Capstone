@@ -1,9 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Photon.Pun;
 
-public class Structure : MonoBehaviourPun
+public class Structure : MonoBehaviour
 {
     public int maxHealth;
     public int health;
