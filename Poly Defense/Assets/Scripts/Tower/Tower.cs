@@ -35,11 +35,26 @@ public class Tower : MonoBehaviour
     public Light impactLight;
     public float slowRatio = .5f;
 
+    // temps to hold base stats
+    private float baseRate;
+    private float baseRange;
+    private int baseDmg;
+
+    public float buffTimer = 3.5f;
+    public GameObject buffEffect;
+    public bool isBuffed = false;
+
     // Start is called before the first frame update
     void Start()
     {
         // per x sec
         InvokeRepeating("UpdateTarget", 0f, 0.5f);
+
+        baseRate = fireRate;
+        baseDmg = dmgOverTime;
+        baseRange = range;
+        buffEffect.transform.position = transform.position;
+        isBuffed = false;
     }
 
     void UpdateTarget()
@@ -148,6 +163,30 @@ public class Tower : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, range);
+    }
+
+    public void BuffTower(float newFireRate, float newRange, int dmg)
+    {   
+        StartCoroutine(RecieveBuffs(newFireRate, newRange, dmg));
+    }
+
+    void RevertBuffs()
+    {
+        fireRate = baseRate;
+        range = baseRange;
+        dmgOverTime = baseDmg;
+        isBuffed = false;
+    }
+
+    IEnumerator RecieveBuffs(float newFireRate, float newRange, int dmg)
+    {
+        isBuffed = true;
+        fireRate = newFireRate;
+        range = newRange;
+        dmgOverTime = dmg;
+       // Debug.Log(range);
+        yield return new WaitForSeconds(buffTimer);
+        RevertBuffs();
     }
 }
 

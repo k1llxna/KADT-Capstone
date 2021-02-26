@@ -588,6 +588,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 10
+  target: {fileID: 0}
   range: 15
   fireRate: 1
   enemyTag: Enemy
@@ -600,9 +601,13 @@ MonoBehaviour:
   dmgOverTime: 20
   useLaser: 0
   lineRenderer: {fileID: 0}
-  impactEffect: {fileID: 0}
+  impactEffect: {fileID: 4392663763907213591, guid: 22c3741b31fbc5e4c99e25ee931cae7c,
+    type: 3}
   impactLight: {fileID: 0}
   slowRatio: 0.5
+  buffTimer: 3.5
+  buffEffect: {fileID: 4392663763907213593, guid: 22c3741b31fbc5e4c99e25ee931cae7c,
+    type: 3}
 --- !u!114 &-7530654307041194573
 MonoBehaviour:
   m_ObjectHideFlags: 0

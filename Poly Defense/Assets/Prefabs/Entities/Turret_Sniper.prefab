@@ -429,6 +429,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
+  target: {fileID: 0}
   range: 100
   fireRate: 1
   enemyTag: Enemy
@@ -444,6 +445,9 @@ MonoBehaviour:
   impactEffect: {fileID: 0}
   impactLight: {fileID: 0}
   slowRatio: 0.5
+  buffTimer: 3.5
+  buffEffect: {fileID: 4392663763907213593, guid: 22c3741b31fbc5e4c99e25ee931cae7c,
+    type: 3}
 --- !u!1 &7758517091551558617
 GameObject:
   m_ObjectHideFlags: 0

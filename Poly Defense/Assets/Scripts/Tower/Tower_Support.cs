@@ -27,7 +27,6 @@ public class Tower_Support : MonoBehaviour
     public float turnSpeed = 10f;
     public Transform firePoint;
 
-
     [Header("Laser Components")]
     public int dmgOverTime = 20;
     public bool useLaser = false;
@@ -35,16 +34,22 @@ public class Tower_Support : MonoBehaviour
     public ParticleSystem impactEffect;
     public float slowRatio = .5f;
 
-    
+    [Header("Buffs")]
+    public int dmgBuff;
+    public float rangeBuff;
+    public float fireRateBuff;
+    public float buffer = 2f;
+    public bool canAttack = true;
 
     // Start is called before the first frame update
     void Start()
     {
         // per x sec
         InvokeRepeating("UpdateTowerTarget", 0f, 0.5f);
+        canAttack = true;
     }
 
-    void UpdateTarget()
+    void UpdateTowerTarget()
     {
         GameObject[] towers = GameObject.FindGameObjectsWithTag(allyTag);
         // store closest tower found
@@ -89,9 +94,9 @@ public class Tower_Support : MonoBehaviour
         }
 
         LockOnTarget();
-        if (useLaser)
+        if (useLaser || canAttack == true)
         {
-            Laser();
+            StartCoroutine(Attack(buffer));
         }
         else
         {
@@ -106,6 +111,14 @@ public class Tower_Support : MonoBehaviour
 
     void Laser()
     {
+        if (targetTower.isBuffed == false)
+        {
+            targetTower.BuffTower(fireRateBuff, rangeBuff, dmgBuff);
+        }
+        else
+        {
+            return;
+        }
         if (!lineRenderer.enabled)
         {
             lineRenderer.enabled = true;
@@ -137,6 +150,14 @@ public class Tower_Support : MonoBehaviour
         {
             bullet.Seek(target);
         }
+    }
+
+    IEnumerator Attack(float timer)
+    {
+        canAttack = false;
+        yield return new WaitForSeconds(timer);
+        canAttack = true;
+        Laser();
     }
 
     public void DealDamage(float damage)
