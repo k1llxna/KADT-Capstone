@@ -39,14 +39,12 @@ public class Tower_Support : MonoBehaviour
     public float rangeBuff;
     public float fireRateBuff;
     public float buffer = 2f;
-    public bool canAttack = true;
 
     // Start is called before the first frame update
     void Start()
     {
         // per x sec
         InvokeRepeating("UpdateTowerTarget", 0f, 0.5f);
-        canAttack = true;
     }
 
     void UpdateTowerTarget()
@@ -94,9 +92,9 @@ public class Tower_Support : MonoBehaviour
         }
 
         LockOnTarget();
-        if (useLaser || canAttack == true)
+        if (useLaser)
         {
-            StartCoroutine(Attack(buffer));
+            Laser();
         }
         else
         {
@@ -150,14 +148,6 @@ public class Tower_Support : MonoBehaviour
         {
             bullet.Seek(target);
         }
-    }
-
-    IEnumerator Attack(float timer)
-    {
-        canAttack = false;
-        yield return new WaitForSeconds(timer);
-        canAttack = true;
-        Laser();
     }
 
     public void DealDamage(float damage)
