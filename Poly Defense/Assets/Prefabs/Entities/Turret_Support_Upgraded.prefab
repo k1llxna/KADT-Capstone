@@ -220,7 +220,8 @@ MonoBehaviour:
   impactLight: {fileID: 0}
   slowRatio: 0.5
   buffTimer: 3.5
-  buffEffect: {fileID: 0}
+  buffEffect: {fileID: 3344252229787619727, guid: 4b00d44a42979b24c80282641543464c,
+    type: 3}
   isBuffed: 0
 --- !u!1 &765487302193340523
 GameObject:
@@ -6879,7 +6880,6 @@ MonoBehaviour:
   rangeBuff: 0
   fireRateBuff: 0
   buffer: 2
-  canAttack: 1
 --- !u!120 &6816909743825987299
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -6898,7 +6898,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 409840319839dae4d8fd5a73d447fd27, type: 2}
+  - {fileID: 2100000, guid: 30cb8d0dd086f734caa9eeebd804debd, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6942,8 +6942,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.9717011, g: 0.99215686, b: 0, a: 1}
-      key1: {r: 0, g: 1, b: 0.20422673, a: 1}
+      key0: {r: 0.45169967, g: 0.99215686, b: 0, a: 1}
+      key1: {r: 1, g: 1, b: 1, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}

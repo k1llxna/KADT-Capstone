@@ -976,8 +976,9 @@ MonoBehaviour:
   impactLight: {fileID: 0}
   slowRatio: 0.5
   buffTimer: 3.5
-  buffEffect: {fileID: 4392663763907213593, guid: 22c3741b31fbc5e4c99e25ee931cae7c,
+  buffEffect: {fileID: 3344252229787619727, guid: 4b00d44a42979b24c80282641543464c,
     type: 3}
+  isBuffed: 0
 --- !u!1 &4981641184752474233
 GameObject:
   m_ObjectHideFlags: 0

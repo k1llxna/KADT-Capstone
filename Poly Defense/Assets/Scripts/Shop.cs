@@ -6,6 +6,7 @@ public class Shop : MonoBehaviour
     public TurretBlueprint missileLauncherTurret;
     public TurretBlueprint laserTurret;
     public TurretBlueprint sniperTurret;
+    public TurretBlueprint supportTurret;
 
     BuildManager buildManager;
 
@@ -34,5 +35,10 @@ public class Shop : MonoBehaviour
     public void SelectSniperTurret()
     {
         buildManager.SelectTurretToBuild(sniperTurret);
+    }
+
+    public void SelectSupportTurret()
+    {
+        buildManager.SelectTurretToBuild(supportTurret);
     }
 }
