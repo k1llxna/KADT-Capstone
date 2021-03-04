@@ -67,6 +67,7 @@ MonoBehaviour:
   buffTimer: 3.5
   buffEffect: {fileID: 4392663763907213593, guid: 22c3741b31fbc5e4c99e25ee931cae7c,
     type: 3}
+  isBuffed: 0
 --- !u!120 &1291988373728658854
 LineRenderer:
   m_ObjectHideFlags: 0
