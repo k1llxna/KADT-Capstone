@@ -49,7 +49,6 @@ public class Character : MonoBehaviour
         //Always start with mana regen
         manaRefreshTime = 3;
         mana = 20;
-        money = 100;
 
         myChar = this;
 
@@ -429,6 +428,11 @@ public class Character : MonoBehaviour
     public void GiveMoney(int amount)
     {
         money += amount;
+
+        if(money > maxMoney)
+        {
+            money = maxMoney;
+        }
     }
 
     public int GetMoney()

@@ -5006,7 +5006,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   explosionForce: 10
   attractionForce: 80
+  worth: 10
   pickupClip: {fileID: 8300000, guid: 5bf2982a69da57745bcb915afebebe2e, type: 3}
+  pickUpTime: 1
 --- !u!82 &-8349733328739098130
 AudioSource:
   m_ObjectHideFlags: 0

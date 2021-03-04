@@ -31,6 +31,7 @@ public class UICurrencyHandler : MonoBehaviour
     void UpdateUI()
     {
         value = player.GetMoney();
+        maxValue = player.maxMoney;
 
         slider.value = (value);
         slider.maxValue = maxValue;

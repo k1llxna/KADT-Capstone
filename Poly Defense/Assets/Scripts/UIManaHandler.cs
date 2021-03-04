@@ -10,8 +10,8 @@ public class UIManaHandler : MonoBehaviour
     public Slider slider;
     public TextMeshProUGUI text;
 
-    int maxValue = 100;
-    int value = 0;
+    int maxValue;
+    int value;
 
     // Start is called before the first frame update
     void Start()
