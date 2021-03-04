@@ -6,7 +6,7 @@ public class Chest : MonoBehaviour
 {
     bool isOpen = false;
 
-    public Transform spawnPoint;
+    public Transform[] spawnPoints;
 
     public GameObject[] jewels;
 
@@ -25,7 +25,9 @@ public class Chest : MonoBehaviour
 
         for(int i = 0; i < 4; i++)
         {
-            Instantiate(jewels[0], spawnPoint.position, Quaternion.identity);
+            int rand = Random.Range(0, jewels.Length);
+
+            Instantiate(jewels[rand], spawnPoints[i].position, Quaternion.identity);
         }
     }
 

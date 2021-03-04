@@ -74,7 +74,7 @@ Light:
   m_Shape: 0
   m_Color: {r: 0, g: 0.14216995, b: 1, a: 1}
   m_Intensity: 10
-  m_Range: 1
+  m_Range: 5
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -154,7 +154,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1903732214158581804}
-  m_LocalRotation: {x: 0.047195014, y: 0.7055301, z: -0.70553, w: 0.047194913}
+  m_LocalRotation: {x: 0.04719517, y: 0.70553005, z: -0.70553, w: 0.047195166}
   m_LocalPosition: {x: 19.424, y: 0.383, z: 4.303}
   m_LocalScale: {x: 6, y: 6, z: 6}
   m_Children:
@@ -162,7 +162,7 @@ Transform:
   - {fileID: 1633121721127415533}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90.00001, y: 0, z: -172.34601}
 --- !u!33 &2778546581947594035
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -250,8 +250,8 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.0165279
-  m_Center: {x: 0.00040163015, y: 0.0011014399, z: 0.008142014}
+  m_Radius: 0.7
+  m_Center: {x: 0.01254046, y: 0.0072436333, z: -0.0000004172325}
 --- !u!82 &1633121721110624088
 AudioSource:
   m_ObjectHideFlags: 0
@@ -378,9 +378,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9101ade31f50d4a4abde59b4aabf27b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosionForce: 0
-  explosionRadius: 0
-  upwardsModifier: 0
+  explosionForce: 1
+  explosionRadius: 100
+  upwardsModifier: 1
   explosionPoint: {fileID: 1633121720841962464}
 --- !u!114 &1633121721110624094
 MonoBehaviour:
@@ -408,4 +408,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   explosionForce: 10
   attractionForce: 80
+  worth: 40
   pickupClip: {fileID: 8300000, guid: 5bf2982a69da57745bcb915afebebe2e, type: 3}
+  pickUpTime: 1
