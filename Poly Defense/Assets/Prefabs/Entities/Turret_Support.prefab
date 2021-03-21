@@ -723,7 +723,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 0
   target: {fileID: 0}
-  range: 15
+  range: 10
   fireRate: 1
   bulletPrefab: {fileID: 0}
   healRate: 1

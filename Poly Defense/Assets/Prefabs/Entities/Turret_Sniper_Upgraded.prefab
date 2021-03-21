@@ -170,7 +170,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: fe20c99f42def4f498732e2797de9e06, type: 2}
+  - {fileID: 2100000, guid: ad9cd98da55885e4cbbc8349a3f20200, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -328,7 +328,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 953023c552648aa4ab370aec92364bd3, type: 2}
+  - {fileID: 2100000, guid: ad9cd98da55885e4cbbc8349a3f20200, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -776,12 +776,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 0
   target: {fileID: 0}
-  range: 100
+  range: 75
   fireRate: 1
   enemyTag: Enemy
   rotator: {fileID: 5322110342956043753}
   turnSpeed: 10
-  bulletPrefab: {fileID: 5198607612172153121, guid: 2b7503ff9bd0bf64eac0a0502d522f1f,
+  bulletPrefab: {fileID: 3447316953094246347, guid: b59b4cd92a79da84ebfc49a02de81897,
     type: 3}
   firePoint: {fileID: 3397709932832318905}
   bulletsPerShot: 0

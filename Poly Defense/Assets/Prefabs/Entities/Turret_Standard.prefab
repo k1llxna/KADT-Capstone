@@ -589,12 +589,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 10
   target: {fileID: 0}
-  range: 15
+  range: 25
   fireRate: 1
   enemyTag: Enemy
   rotator: {fileID: 6579745106217038879}
   turnSpeed: 10
-  bulletPrefab: {fileID: 5198607612172153121, guid: 2b7503ff9bd0bf64eac0a0502d522f1f,
+  bulletPrefab: {fileID: 8644404773070583542, guid: 6a3096aeff24a9f4f828fe896c545117,
     type: 3}
   firePoint: {fileID: 2255057454834373818}
   bulletsPerShot: 0
